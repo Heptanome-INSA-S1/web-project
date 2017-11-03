@@ -1,5 +1,5 @@
 select * WHERE
 {
-  FILTER(?s IN (<http://dbpedia.org/resource/Michelle_Obama>, <http://dbpedia.org/resource/Student>)) .
+  FILTER(?s IN (<http://dbpedia.org/searchLink/Michelle_Obama>, <http://dbpedia.org/searchLink/Student>)) .
   ?s ?p ?o. 
 }

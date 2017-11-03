@@ -1,16 +1,1007 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>@font-face {
+  font-family: octicons-anchor;
+  src: url(data:font/woff;charset=utf-8;base64,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) format('woff');
+}
 
-<html xmlns:th="http://www.thymeleaf.org">
+* {
+    box-sizing: border-box;
+}
 
-<head>
-    <title>Good Thymes Virtual Grocery</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
+body {
+    width: 980px;
+    margin-right: auto;
+    margin-left: auto;
+}
 
-<body>
+body .markdown-body {
+    padding: 45px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    word-wrap: break-word;
+}
 
-    Home
+pre {
+    font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
 
-</body>
+.markdown-body {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  color: #333;
+  font-family: "Helvetica Neue", Helvetica, "Segoe UI", Arial, freesans, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 16px;
+  line-height: 1.6;
+  word-wrap: break-word;
+}
 
-</html>
+.markdown-body a {
+  background-color: transparent;
+}
+
+.markdown-body a:active,
+.markdown-body a:hover {
+  outline: 0;
+}
+
+.markdown-body strong {
+  font-weight: bold;
+}
+
+.markdown-body h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+.markdown-body img {
+  border: 0;
+}
+
+.markdown-body hr {
+  box-sizing: content-box;
+  height: 0;
+}
+
+.markdown-body pre {
+  overflow: auto;
+}
+
+.markdown-body code,
+.markdown-body kbd,
+.markdown-body pre {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+.markdown-body input {
+  color: inherit;
+  font: inherit;
+  margin: 0;
+}
+
+.markdown-body html input[disabled] {
+  cursor: default;
+}
+
+.markdown-body input {
+  line-height: normal;
+}
+
+.markdown-body input[type="checkbox"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.markdown-body td,
+.markdown-body th {
+  padding: 0;
+}
+
+.markdown-body input {
+  font: 13px / 1.4 Helvetica, arial, nimbussansl, liberationsans, freesans, clean, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.markdown-body a {
+  color: #4078c0;
+  text-decoration: none;
+}
+
+.markdown-body a:hover,
+.markdown-body a:active {
+  text-decoration: underline;
+}
+
+.markdown-body hr {
+  height: 0;
+  margin: 15px 0;
+  overflow: hidden;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.markdown-body hr:before {
+  display: table;
+  content: "";
+}
+
+.markdown-body hr:after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  line-height: 1.1;
+}
+
+.markdown-body h1 {
+  font-size: 30px;
+}
+
+.markdown-body h2 {
+  font-size: 21px;
+}
+
+.markdown-body h3 {
+  font-size: 16px;
+}
+
+.markdown-body h4 {
+  font-size: 14px;
+}
+
+.markdown-body h5 {
+  font-size: 12px;
+}
+
+.markdown-body h6 {
+  font-size: 11px;
+}
+
+.markdown-body blockquote {
+  margin: 0;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body ol ol,
+.markdown-body ul ol {
+  list-style-type: lower-roman;
+}
+
+.markdown-body ul ul ol,
+.markdown-body ul ol ol,
+.markdown-body ol ul ol,
+.markdown-body ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+.markdown-body dd {
+  margin-left: 0;
+}
+
+.markdown-body code {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 0;
+  font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+}
+
+.markdown-body .select::-ms-expand {
+  opacity: 0;
+}
+
+.markdown-body .octicon {
+  font: normal normal normal 16px/1 octicons-anchor;
+  display: inline-block;
+  text-decoration: none;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.markdown-body .octicon-link:before {
+  content: '\f05c';
+}
+
+.markdown-body:before {
+  display: table;
+  content: "";
+}
+
+.markdown-body:after {
+  display: table;
+  clear: both;
+  content: "";
+}
+
+.markdown-body>*:first-child {
+  margin-top: 0 !important;
+}
+
+.markdown-body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+
+.markdown-body .anchor {
+  display: inline-block;
+  padding-right: 2px;
+  margin-left: -18px;
+}
+
+.markdown-body .anchor:focus {
+  outline: none;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  margin-top: 1em;
+  margin-bottom: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.markdown-body h1 .octicon-link,
+.markdown-body h2 .octicon-link,
+.markdown-body h3 .octicon-link,
+.markdown-body h4 .octicon-link,
+.markdown-body h5 .octicon-link,
+.markdown-body h6 .octicon-link {
+  color: #000;
+  vertical-align: middle;
+  visibility: hidden;
+}
+
+.markdown-body h1:hover .anchor,
+.markdown-body h2:hover .anchor,
+.markdown-body h3:hover .anchor,
+.markdown-body h4:hover .anchor,
+.markdown-body h5:hover .anchor,
+.markdown-body h6:hover .anchor {
+  text-decoration: none;
+}
+
+.markdown-body h1:hover .anchor .octicon-link,
+.markdown-body h2:hover .anchor .octicon-link,
+.markdown-body h3:hover .anchor .octicon-link,
+.markdown-body h4:hover .anchor .octicon-link,
+.markdown-body h5:hover .anchor .octicon-link,
+.markdown-body h6:hover .anchor .octicon-link {
+  visibility: visible;
+}
+
+.markdown-body h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h1 .anchor {
+  line-height: 1;
+}
+
+.markdown-body h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+
+.markdown-body h2 .anchor {
+  line-height: 1;
+}
+
+.markdown-body h3 {
+  font-size: 1.5em;
+  line-height: 1.43;
+}
+
+.markdown-body h3 .anchor {
+  line-height: 1.2;
+}
+
+.markdown-body h4 {
+  font-size: 1.25em;
+}
+
+.markdown-body h4 .anchor {
+  line-height: 1.2;
+}
+
+.markdown-body h5 {
+  font-size: 1em;
+}
+
+.markdown-body h5 .anchor {
+  line-height: 1.1;
+}
+
+.markdown-body h6 {
+  font-size: 1em;
+  color: #777;
+}
+
+.markdown-body h6 .anchor {
+  line-height: 1.1;
+}
+
+.markdown-body p,
+.markdown-body blockquote,
+.markdown-body ul,
+.markdown-body ol,
+.markdown-body dl,
+.markdown-body table,
+.markdown-body pre {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.markdown-body hr {
+  height: 4px;
+  padding: 0;
+  margin: 16px 0;
+  background-color: #e7e7e7;
+  border: 0 none;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  padding-left: 2em;
+}
+
+.markdown-body ul ul,
+.markdown-body ul ol,
+.markdown-body ol ol,
+.markdown-body ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.markdown-body li>p {
+  margin-top: 16px;
+}
+
+.markdown-body dl {
+  padding: 0;
+}
+
+.markdown-body dl dt {
+  padding: 0;
+  margin-top: 16px;
+  font-size: 1em;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.markdown-body dl dd {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.markdown-body blockquote {
+  padding: 0 15px;
+  color: #777;
+  border-left: 4px solid #ddd;
+}
+
+.markdown-body blockquote>:first-child {
+  margin-top: 0;
+}
+
+.markdown-body blockquote>:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: normal;
+  word-break: keep-all;
+}
+
+.markdown-body table th {
+  font-weight: bold;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 6px 13px;
+  border: 1px solid #ddd;
+}
+
+.markdown-body table tr {
+  background-color: #fff;
+  border-top: 1px solid #ccc;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  box-sizing: content-box;
+  background-color: #fff;
+}
+
+.markdown-body code {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0,0,0,0.04);
+  border-radius: 3px;
+}
+
+.markdown-body code:before,
+.markdown-body code:after {
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+
+.markdown-body pre>code {
+  padding: 0;
+  margin: 0;
+  font-size: 100%;
+  word-break: normal;
+  white-space: pre;
+  background: transparent;
+  border: 0;
+}
+
+.markdown-body .highlight {
+  margin-bottom: 16px;
+}
+
+.markdown-body .highlight pre,
+.markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f7f7f7;
+  border-radius: 3px;
+}
+
+.markdown-body .highlight pre {
+  margin-bottom: 0;
+  word-break: normal;
+}
+
+.markdown-body pre {
+  word-wrap: normal;
+}
+
+.markdown-body pre code {
+  display: inline;
+  max-width: initial;
+  padding: 0;
+  margin: 0;
+  overflow: initial;
+  line-height: inherit;
+  word-wrap: normal;
+  background-color: transparent;
+  border: 0;
+}
+
+.markdown-body pre code:before,
+.markdown-body pre code:after {
+  content: normal;
+}
+
+.markdown-body kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font-size: 11px;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb;
+}
+
+.markdown-body .pl-c {
+  color: #969896;
+}
+
+.markdown-body .pl-c1,
+.markdown-body .pl-s .pl-v {
+  color: #0086b3;
+}
+
+.markdown-body .pl-e,
+.markdown-body .pl-en {
+  color: #795da3;
+}
+
+.markdown-body .pl-s .pl-s1,
+.markdown-body .pl-smi {
+  color: #333;
+}
+
+.markdown-body .pl-ent {
+  color: #63a35c;
+}
+
+.markdown-body .pl-k {
+  color: #a71d5d;
+}
+
+.markdown-body .pl-pds,
+.markdown-body .pl-s,
+.markdown-body .pl-s .pl-pse .pl-s1,
+.markdown-body .pl-sr,
+.markdown-body .pl-sr .pl-cce,
+.markdown-body .pl-sr .pl-sra,
+.markdown-body .pl-sr .pl-sre {
+  color: #183691;
+}
+
+.markdown-body .pl-v {
+  color: #ed6a43;
+}
+
+.markdown-body .pl-id {
+  color: #b52a1d;
+}
+
+.markdown-body .pl-ii {
+  background-color: #b52a1d;
+  color: #f8f8f8;
+}
+
+.markdown-body .pl-sr .pl-cce {
+  color: #63a35c;
+  font-weight: bold;
+}
+
+.markdown-body .pl-ml {
+  color: #693a17;
+}
+
+.markdown-body .pl-mh,
+.markdown-body .pl-mh .pl-en,
+.markdown-body .pl-ms {
+  color: #1d3e81;
+  font-weight: bold;
+}
+
+.markdown-body .pl-mq {
+  color: #008080;
+}
+
+.markdown-body .pl-mi {
+  color: #333;
+  font-style: italic;
+}
+
+.markdown-body .pl-mb {
+  color: #333;
+  font-weight: bold;
+}
+
+.markdown-body .pl-md {
+  background-color: #ffecec;
+  color: #bd2c00;
+}
+
+.markdown-body .pl-mi1 {
+  background-color: #eaffea;
+  color: #55a532;
+}
+
+.markdown-body .pl-mdr {
+  color: #795da3;
+  font-weight: bold;
+}
+
+.markdown-body .pl-mo {
+  color: #1d3e81;
+}
+
+.markdown-body kbd {
+  display: inline-block;
+  padding: 3px 5px;
+  font: 11px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  line-height: 10px;
+  color: #555;
+  vertical-align: middle;
+  background-color: #fcfcfc;
+  border: solid 1px #ccc;
+  border-bottom-color: #bbb;
+  border-radius: 3px;
+  box-shadow: inset 0 -1px 0 #bbb;
+}
+
+.markdown-body .plan-price-unit {
+  color: #767676;
+  font-weight: normal;
+}
+
+.markdown-body .task-list-item {
+  list-style-type: none;
+}
+
+.markdown-body .task-list-item+.task-list-item {
+  margin-top: 3px;
+}
+
+.markdown-body .task-list-item input {
+  margin: 0 0.35em 0.25em -1.6em;
+  vertical-align: middle;
+}
+
+.markdown-body .plan-choice {
+  padding: 15px;
+  padding-left: 40px;
+  display: block;
+  border: 1px solid #e0e0e0;
+  position: relative;
+  font-weight: normal;
+  background-color: #fafafa;
+}
+
+.markdown-body .plan-choice.open {
+  background-color: #fff;
+}
+
+.markdown-body .plan-choice.open .plan-choice-seat-breakdown {
+  display: block;
+}
+
+.markdown-body .plan-choice-free {
+  border-radius: 3px 3px 0 0;
+}
+
+.markdown-body .plan-choice-paid {
+  border-radius: 0 0 3px 3px;
+  border-top: 0;
+  margin-bottom: 20px;
+}
+
+.markdown-body .plan-choice-radio {
+  position: absolute;
+  left: 15px;
+  top: 18px;
+}
+
+.markdown-body .plan-choice-exp {
+  color: #999;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.markdown-body .plan-choice-seat-breakdown {
+  margin-top: 10px;
+  display: none;
+}
+
+.markdown-body :checked+.radio-label {
+  z-index: 1;
+  position: relative;
+  border-color: #4078c0;
+}
+</style><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+MathJax.Hub.Config({
+  config: ["MMLorHTML.js"],
+  extensions: ["tex2jax.js"],
+  jax: ["input/TeX"],
+  tex2jax: {
+    inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+    processEscapes: false
+  },
+  TeX: {
+    extensions: ["AMSmath.js", "AMSsymbols.js"],
+    TagSide: "right",
+    TagIndent: ".8em",
+    MultLineWidth: "85%",
+    equationNumbers: {
+      autoNumber: "AMS",
+    },
+    unicode: {
+      fonts: "STIXGeneral,'Arial Unicode MS'"
+    }
+  },
+  showProcessingMessages: false
+});
+</script>
+<title>index</title></head><body><article class="markdown-body"><h1>
+<a id="user-content-api-documentation" class="anchor" href="#api-documentation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Api Documentation</h1>
+<h2>
+<a id="user-content-methods" class="anchor" href="#methods" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Methods</h2>
+<ul>
+<li><a href="#user-content-searchlinks">searchLinks</a></li>
+<li><a href="#user-content-fillcontent">fillContent</a></li>
+<li><a href="#user-content-analyse">analyse</a></li>
+<li><a href="#user-content-getrdf">getRdf</a></li>
+</ul>
+<h3>
+<a id="user-content-searchlinks" class="anchor" href="#searchlinks" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/searchLinks</h3>
+<pre><code>GET http://localhost:8080/searchLinks?query=QUERY&amp;offset=OFFSET
+</code></pre>
+<table>
+<thead>
+<tr>
+<th align="center">Argument Name</th>
+<th align="center">Kind</th>
+<th align="center">Type</th>
+<th align="center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">query</td>
+<td align="center">QueryParam</td>
+<td align="center">String</td>
+<td align="center">The key words to search</td>
+</tr>
+<tr>
+<td align="center">offset</td>
+<td align="center">QueryParam</td>
+<td align="center">Optional Integer <code>default = 0</code>
+</td>
+<td align="center">The result offset</td>
+</tr>
+</tbody>
+</table>
+<p>Query example:</p>
+<pre><code>GET http://localhost:8080/searchLinks?query=Game+Of+Thrones&amp;offset=10
+</code></pre>
+<p><a href="http://localhost:8080/searchLinks?query=Game+Of+Thrones&amp;offset=10">Run</a></p>
+<p>Response example:</p>
+<div class="highlight highlight-source-js"><pre><span class="pl-c"><span class="pl-c">//</span> List of SearchLink</span>
+[
+    {
+        <span class="pl-s"><span class="pl-pds">"</span>url<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>https://www.hbo.com/game-of-thrones<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>title<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Game of Thrones - Official Website for the HBO Series - HBO.com<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>The official website for Game of Thrones on HBO, featuring full episodes online, interviews, schedule information and episode guides.<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>content<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">null</span>
+    },
+    {
+        <span class="pl-s"><span class="pl-pds">"</span>url<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>https://fr.wikipedia.org/wiki/Game_of_Thrones<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>title<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Game of Thrones — Wikipédia<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>Cet article ou cette section contient des informations sur une série télévisée en cours de production, programmée ou prévue. Le texte est susceptible de contenir ...<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>content<span class="pl-pds">"</span></span><span class="pl-k">:</span> <span class="pl-c1">null</span>
+    } <span class="pl-c"><span class="pl-c">//</span>,...</span>
+]</pre></div>
+<h3>
+<a id="user-content-fillcontent" class="anchor" href="#fillcontent" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/fillContent</h3>
+<pre><code>PUT http://localhost:8080/fillContent
+</code></pre>
+<table>
+<thead>
+<tr>
+<th align="center">Argument Name</th>
+<th align="center">Kind</th>
+<th align="center">Type</th>
+<th align="center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">-</td>
+<td align="center">BodyParam</td>
+<td align="center">Array of <a href="#user-content-searchlink">SearchLink</a>
+</td>
+<td align="center">The search links to fill</td>
+</tr>
+</tbody>
+</table>
+<p>Query example:</p>
+<div class="highlight highlight-source-json"><pre>// Schema: Array&lt;SearchLink&gt;
+[
+    {
+        <span class="pl-s"><span class="pl-pds">"</span>url<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>https://www.hbo.com/game-of-thrones<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>title<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Game of Thrones - Official Website for the HBO Series - HBO.com<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>The official website for Game of Thrones on HBO, featuring full episodes online, interviews, schedule information and episode guides.<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>content<span class="pl-pds">"</span></span>: <span class="pl-c1">null</span>
+    },
+    {
+        <span class="pl-s"><span class="pl-pds">"</span>url<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>https://fr.wikipedia.org/wiki/Game_of_Thrones<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>title<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Game of Thrones — Wikipédia<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Cet article ou cette section contient des informations sur une série télévisée en cours de production, programmée ou prévue. Le texte est susceptible de contenir ...<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>content<span class="pl-pds">"</span></span>: <span class="pl-c1">null</span>
+    }
+]</pre></div>
+<p>Response example:</p>
+<div class="highlight highlight-source-json"><pre>// Schema: Array&lt;SearchLink&gt; 
+[
+    {
+        <span class="pl-s"><span class="pl-pds">"</span>url<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>https://www.hbo.com/game-of-thrones<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>title<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Game of Thrones - Official Website for the HBO Series - HBO.com<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>The official website for Game of Thrones on HBO, featuring full episodes online, interviews, schedule information and episode guides.<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>content<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Summers span decades. Winters can last a lifetime. And the struggle for the Iron Throne begins. Based on the bestselling book series by George R.R. Martin and created by David Benioff and D.B. Weiss. Season 7 Looking for the Latest?Head to the Season 7 episode page for the most recent interviews, videos and extras. Spoilers follow.Season...<span class="pl-pds">"</span></span>
+    },
+    {
+        <span class="pl-s"><span class="pl-pds">"</span>url<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>https://fr.wikipedia.org/wiki/Game_of_Thrones<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>title<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Game of Thrones — Wikipédia<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Cet article ou cette section contient des informations sur une série télévisée en cours de production, programmée ou prévue. Le texte est susceptible de contenir ...<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>content<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Le texte est susceptible de contenir des informations spéculatives et son contenu peut être nettement modifié au fur et à mesure de l’avancement de la série et des informations disponibles s’y rapportant.  Logo original de la série.modifier Game of Thrones, également désignée par le titre français de l'œuvre romanesque dont elle est adaptée, Le Trône de fer (A Song of Ice and Fire), est une série télévisée américaine médiéval-fantastique[1] créée par David Benioff et D. B. Weiss, diffusée depuis le 17 avril 2011 sur HBO. Il s'agit de l'adaptation de la série de romans écrits par George R. R. Martin depuis 1996, saga réputée pour...<span class="pl-pds">"</span></span>
+    }
+]</pre></div>
+<h3>
+<a id="user-content-analyse" class="anchor" href="#analyse" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/analyse</h3>
+<pre><code>POST http://localhost:8080/analyse
+</code></pre>
+<table>
+<thead>
+<tr>
+<th align="center">Argument Name</th>
+<th align="center">Kind</th>
+<th align="center">Type</th>
+<th align="center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">-</td>
+<td align="center">BodyParam</td>
+<td align="center"><a href="#user-content-dbpediaquery">DBpediaQuery</a></td>
+<td align="center">The DBpediaQuery to send</td>
+</tr>
+</tbody>
+</table>
+<p>Query example:</p>
+<div class="highlight highlight-source-json"><pre>// Schema: DBpediaQuery
+{
+	<span class="pl-s"><span class="pl-pds">"</span>confidence<span class="pl-pds">"</span></span>: <span class="pl-c1">0.8</span>,
+	<span class="pl-s"><span class="pl-pds">"</span>support<span class="pl-pds">"</span></span>: <span class="pl-c1">5</span>,
+	<span class="pl-s"><span class="pl-pds">"</span>resources<span class="pl-pds">"</span></span>:
+	[
+	    {
+	        <span class="pl-s"><span class="pl-pds">"</span>url<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>https://www.hbo.com/game-of-thrones<span class="pl-pds">"</span></span>,
+	        <span class="pl-s"><span class="pl-pds">"</span>title<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Game of Thrones - Official Website for the HBO Series - HBO.com<span class="pl-pds">"</span></span>,
+	        <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>The official website for Game of Thrones on HBO, featuring full episodes online, interviews, schedule information and episode guides.<span class="pl-pds">"</span></span>,
+	        "content": "Summers span decades. Winters can last a lifetime. And the struggle for the Iron Throne begins. Based on the bestselling book series by George R.R. Martin and created by David Benioff and D.B. Weiss.    Season 7  Looking for the Latest? Head to the Season 7 episode page for the most recent interviews, videos and extras.  Spoilers follow. Season 7  Looking for the Latest? Head to the Season 7 episode page for the most recent interviews, videos and extras.  Spoilers follow. WATCH FOR FREE Missing Game of Thrones? The Game Revealed  pulls back the curtain on the biggest scenes of Season 7. Watch the first episode now.    Visit the sites below to discover everything you need to know about  Game of Thrones.      MAKING GAME OF THRONES Visit the Official Blog Stocked with interviews, storyboards, prop photos and facts from seasons past, use  Making Game of Thrones  to go deeper inside the epic series.    GAMEOFTHRONES.COM The Ultimate Viewer?s Guide Seven seasons can be hard to keep straight. Let the Viewer?s Guide help: Tell it where you are in the series and explore recaps, videos and images.    WHISPERS OF WESTEROS Sign Up for the Newsletter Stay up to date with exclusive content, behind-the-scenes looks and more with Whispers of Westeros, the  Game of Thrones  newsletter.  MAKING GAME OF THRONES Visit the Official Blog Stocked with interviews, storyboards, prop photos and facts from seasons past, use  Making Game of Thrones  to go deeper inside the epic series.    GAMEOFTHRONES.COM The Ultimate Viewer?s Guide Seven seasons can be hard to keep straight. Let the Viewer?s Guide help: Tell it where you are in the series and explore recaps, videos and images.    WHISPERS OF WESTEROS Sign Up for the Newsletter Stay up to date with exclusive content, behind-the-scenes looks and more with Whispers of Westeros, the  Game of Thrones  newsletter.  ?Pulls you in ? and doesn?t let go.? ? LOS ANGELES TIMES A Story in Cloth Costume designer Michele Clapton discusses her approach and where she finds inspiration.    A Story in Special Effects Special effects supervisor Sam Conway talks creating ?chaos and mayhem? from the set.    A Story in Score Composer Ramin Djawadi describes his process for creating a defining sound for  Game of Thrones.    A Story in Cloth Costume designer Michele Clapton discusses her approach and where she finds inspiration.    A Story in Special Effects Special effects supervisor Sam Conway talks creating ?chaos and mayhem? from the set.    A Story in Score Composer Ramin Djawadi describes his process for creating a defining sound for  Game of Thrones.    See the Opening Titles in 360 Travel from the North to King?s Landing to Dorne with this 360 degree video.    The Deuce Westworld The Leftovers Rome Enjoy HBO?s original series, hit movies, and more. HBO is available through your TV provider, existing digital subscriptions, or in our stand-alone app.    HBO GO is a free streaming service for those who subscribe to HBO through a TV provider.    \ufffd 2017 Home Box Office, Inc. All Rights Reserved. This website may contain mature content."
+	    }
+	]
+}</pre></div>
+<p>Response example:</p>
+<div class="highlight highlight-source-json"><pre>// Schema: URI =&gt; Array&lt;Annotation&gt;
+{
+    <span class="pl-s"><span class="pl-pds">"</span>https://www.hbo.com/game-of-thrones<span class="pl-pds">"</span></span>: [
+        {
+            <span class="pl-s"><span class="pl-pds">"</span>surface<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>WESTEROS<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>types<span class="pl-pds">"</span></span>: [
+                <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+            ],
+            <span class="pl-s"><span class="pl-pds">"</span>support<span class="pl-pds">"</span></span>: <span class="pl-c1">981</span>,
+            <span class="pl-s"><span class="pl-pds">"</span>uri<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>http://dbpedia.org/resource/World_of_A_Song_of_Ice_and_Fire<span class="pl-pds">"</span></span>
+        },
+        {
+            <span class="pl-s"><span class="pl-pds">"</span>surface<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>BD+<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>types<span class="pl-pds">"</span></span>: [
+                <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span>
+            ],
+            <span class="pl-s"><span class="pl-pds">"</span>support<span class="pl-pds">"</span></span>: <span class="pl-c1">52</span>,
+            <span class="pl-s"><span class="pl-pds">"</span>uri<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>http://dbpedia.org/resource/Durchmusterung<span class="pl-pds">"</span></span>
+        },
+        {
+            <span class="pl-s"><span class="pl-pds">"</span>surface<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>HBO<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>types<span class="pl-pds">"</span></span>: [
+                <span class="pl-s"><span class="pl-pds">"</span>DBpedia:Agent<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>Schema:Organization<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>DBpedia:Organisation<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>DBpedia:Broadcaster<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>Schema:TelevisionStation<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>DBpedia:TelevisionStation<span class="pl-pds">"</span></span>
+            ],
+            <span class="pl-s"><span class="pl-pds">"</span>support<span class="pl-pds">"</span></span>: <span class="pl-c1">8669</span>,
+            <span class="pl-s"><span class="pl-pds">"</span>uri<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>http://dbpedia.org/resource/HBO<span class="pl-pds">"</span></span>
+        },
+        {
+            <span class="pl-s"><span class="pl-pds">"</span>surface<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>Westworld<span class="pl-pds">"</span></span>,
+            <span class="pl-s"><span class="pl-pds">"</span>types<span class="pl-pds">"</span></span>: [
+                <span class="pl-s"><span class="pl-pds">"</span>Schema:CreativeWork<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>DBpedia:Work<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>Schema:Movie<span class="pl-pds">"</span></span>,
+                <span class="pl-s"><span class="pl-pds">"</span>DBpedia:Film<span class="pl-pds">"</span></span>
+            ],
+            <span class="pl-s"><span class="pl-pds">"</span>support<span class="pl-pds">"</span></span>: <span class="pl-c1">84</span>,
+            <span class="pl-s"><span class="pl-pds">"</span>uri<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>http://dbpedia.org/resource/Westworld<span class="pl-pds">"</span></span>
+        }
+    ]
+}</pre></div>
+<h3>
+<a id="user-content-getrdf" class="anchor" href="#getrdf" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>/getRdf</h3>
+<div class="highlight highlight-source-json"><pre>POST http://localhost:<span class="pl-c1">8080</span>/getRdf</pre></div>
+<p>Query example:</p>
+<pre><code>{
+	"url": "http://dbpedia.org/resource/List_of_A_Song_of_Ice_and_Fire_characters"
+}
+</code></pre>
+<p>Response example:</p>
+<div class="highlight highlight-source-json"><pre>// Schema: URI =&gt; Array&lt;Tuple&lt;Predicat, Object&gt;&gt;
+{
+	<span class="pl-s"><span class="pl-pds">"</span>http://dbpedia.org/resource/Garlan_Tyrell<span class="pl-pds">"</span></span>: [
+        {
+            <span class="pl-s"><span class="pl-pds">"</span>http://dbpedia.org/ontology/wikiPageRedirects<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>http://dbpedia.org/resource/List_of_A_Song_of_Ice_and_Fire_characters<span class="pl-pds">"</span></span>
+        }
+    ],
+    <span class="pl-s"><span class="pl-pds">"</span>http://dbpedia.org/resource/Clegane<span class="pl-pds">"</span></span>: [
+        {
+            <span class="pl-s"><span class="pl-pds">"</span>http://dbpedia.org/ontology/wikiPageRedirects<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>http://dbpedia.org/resource/List_of_A_Song_of_Ice_and_Fire_characters<span class="pl-pds">"</span></span>
+        }
+    ],
+    <span class="pl-s"><span class="pl-pds">"</span>http://dbpedia.org/resource/Obella_Sand<span class="pl-pds">"</span></span>: [
+        {
+            <span class="pl-s"><span class="pl-pds">"</span>http://dbpedia.org/ontology/wikiPageRedirects<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>http://dbpedia.org/resource/List_of_A_Song_of_Ice_and_Fire_characters<span class="pl-pds">"</span></span>
+        }
+    ],
+	<span class="pl-s"><span class="pl-pds">"</span>http://dbpedia.org/resource/List_of_A_Song_of_Ice_and_Fire_characters<span class="pl-pds">"</span></span>: [
+        {
+            "http://dbpedia.org/ontology/abstract[@fr]": "Cet article présente la liste des personnages du cycle de fantasy Le Trône de fer (A Song of Ice and Fire) écrit par George R. R. Martin. Les romans présentent trois intrigues entrelacées : une guerre de dynastie pour le contrôle de Westeros par plusieurs grandes maisons ; la menace grandissante venue du Nord posée par des créatures appelées « les Autres » (The Others) ; et les ambitions royales de , l'héritière exilée d'une dynastie presque disparue. Chaque chapitre est narré à travers les yeux d'un seul personnage, par un point de vue interne à la troisième personne. Au début de la saga, les romans adoptaient à tour de rôle les points de vue de neuf personnages (1996) ; ce nombre va jusqu'à trente-et-un dans A Dance with Dragons (2011). Réutilisés dans les œuvres dérivées des romans, leurs descriptions peuvent varier légèrement, notamment par rapport à celles de la série télévisée, dont les personnages et leurs interprètes sont détaillés ici. Note : les personnages sont classés par grandes maisons ; au sein des différentes maisons, les membres de la famille sont indiqués en premier tandis que leur maisonnée, leurs alliés et leurs bannerets sont indiqués à la suite. Les noms originaux (en anglais) sont indiqués entre parenthèses.@fr"
+        },
+        {
+            <span class="pl-s"><span class="pl-pds">"</span>http://www.w3.org/2002/07/owl#sameAs<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>http://de.dbpedia.org/resource/Figuren_im_Lied_von_Eis_und_Feuer<span class="pl-pds">"</span></span>
+        }
+    ]
+}</pre></div>
+<h2>
+<a id="user-content-data" class="anchor" href="#data" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Data</h2>
+<h3>
+<a id="user-content-searchlink" class="anchor" href="#searchlink" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>SearchLink</h3>
+<div class="highlight highlight-source-json"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>url<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>string | The url of the link<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>title<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>string | The title of the link<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>description<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>string | A short description of the link's content<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>content<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>string | The content of the link<span class="pl-pds">"</span></span>
+}	</pre></div>
+<h3>
+<a id="user-content-dbpediaquery" class="anchor" href="#dbpediaquery" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>DBpediaQuery</h3>
+<div class="highlight highlight-source-json"><pre>{
+	<span class="pl-s"><span class="pl-pds">"</span>confidence<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>double | Confidence of dbpedia in the result (from 0 to 1.0)<span class="pl-pds">"</span></span>,
+	<span class="pl-s"><span class="pl-pds">"</span>support<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>integer | The minimal require number of in egdes on the resource in DBpedia<span class="pl-pds">"</span></span>,
+	<span class="pl-s"><span class="pl-pds">"</span>resources<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>array of &lt;SearchLink&gt; | The search links to analyse<span class="pl-pds">"</span></span>
+}</pre></div>
+<h3>
+<a id="user-content-annotation" class="anchor" href="#annotation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Annotation</h3>
+<div class="highlight highlight-source-json"><pre>{
+    <span class="pl-s"><span class="pl-pds">"</span>surface<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>string | The text which triggers the resource<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>types<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>array of &lt;string&gt; | The list of types of the resource<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>support<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>integer | The index of the surface word in the text<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>uri<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>string | The resource URI<span class="pl-pds">"</span></span>
+}</pre></div>
+</article></body></html>

@@ -1,28 +1,50 @@
 package fr.insalyon.pld.semanticweb.controller;
 
 
-import fr.insalyon.pld.semanticweb.extensions.StringExt;
 import fr.insalyon.pld.semanticweb.model.Annotation;
 import fr.insalyon.pld.semanticweb.model.DBpediaQuery;
 import fr.insalyon.pld.semanticweb.model.JsonObject;
 import fr.insalyon.pld.semanticweb.model.SearchLink;
 import fr.insalyon.pld.semanticweb.tools.HttpHelper;
 import fr.insalyon.pld.semanticweb.tools.Kotlin;
+import javafx.util.Pair;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.FileUtils;
+import org.apache.jena.rdf.model.Literal;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.jsoup.helper.HttpConnection;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.xpath.XPathExpressionException;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
+import static fr.insalyon.pld.semanticweb.extensions.CollectionExt.toSet;
 import static fr.insalyon.pld.semanticweb.extensions.StringExt.splitOfLength;
 import static fr.insalyon.pld.semanticweb.extensions.StringExt.toUrlParameter;
 import static fr.insalyon.pld.semanticweb.model.JsonObject.jsonObjectOf;
 import static fr.insalyon.pld.semanticweb.tools.Kotlin.mutableListOf;
+import static fr.insalyon.pld.semanticweb.tools.Kotlin.mutableMapOf;
 
 @Controller
-public class TestController {
+public class MainController {
+
+    private String renderHtml(String view) throws IOException {
+        return FileUtils.readFileToString(new File("src/main/resources/" + view + ".html"), "UTF-8");
+    }
+
+    @RequestMapping("/")
+    public @ResponseBody
+    String index() throws IOException {
+        return renderHtml("templates/index");
+    }
 
     @RequestMapping("/searchLinks")
     public @ResponseBody
@@ -51,16 +73,16 @@ public class TestController {
 
     @RequestMapping(value = "/analyse", method = RequestMethod.POST)
     public @ResponseBody
-    JsonObject analyse(
+    Map<String, List<Annotation>> analyse(
             @RequestBody DBpediaQuery dBpediaQuery
-            ) {
+    ) {
 
-        JsonObject response = jsonObjectOf();
+        Map<String, List<Annotation>> response = mutableMapOf();
 
         dBpediaQuery.resources.forEach(searchLink -> {
 
-            response.put(searchLink.url, Kotlin.<Annotation>mutableListOf());
-            splitOfLength(searchLink.content, 1024).forEach( subcontent -> {
+            response.put(searchLink.url, mutableListOf());
+            splitOfLength(searchLink.content, 2048).forEach( subcontent -> {
 
                 HttpHelper httpHelper = new HttpHelper("http://model.dbpedia-spotlight.org/en/annotate")
                         .with("text", toUrlParameter(subcontent))
@@ -80,10 +102,37 @@ public class TestController {
 
     @RequestMapping("/getRdf")
     public @ResponseBody
-    String getRdf(
+    JsonObject getRdf(
             @RequestBody SearchLink searchLink
     ) throws IOException {
-        return (new HttpHelper(searchLink.url)).getRdf().toString();
+        return toCleanJson(ModelFactory.createDefaultModel().read(searchLink.url));
+    }
+
+    private JsonObject toCleanJson(Model self) {
+
+        JsonObject jsonObject = jsonObjectOf();
+
+        self.listSubjects().forEachRemaining(subject -> {
+
+            List<JsonObject> properties = new ArrayList<>();
+            subject.listProperties().forEachRemaining(triplet -> {
+                String predicateName = triplet.getPredicate().getNameSpace() + triplet.getPredicate().getLocalName();
+                try {
+                    if(!triplet.getLanguage().isEmpty()) {
+                        predicateName += "[@" + triplet.getLanguage() + "]";
+                    }
+                } catch (Exception ignored) {}
+                properties.add(
+                        jsonObjectOf(new Pair<>(predicateName, triplet.getObject().toString()))
+                );
+            });
+
+            jsonObject.put(subject.toString(), properties);
+        });
+
+        return jsonObject;
+
+
     }
 
 }
