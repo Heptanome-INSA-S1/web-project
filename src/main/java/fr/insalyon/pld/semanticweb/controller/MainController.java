@@ -84,7 +84,7 @@ public class MainController {
             response.put(searchLink.url, mutableListOf());
             splitOfLength(searchLink.content, 2048).forEach( subcontent -> {
 
-                HttpHelper httpHelper = new HttpHelper("http://model.dbpedia-spotlight.org/en/annotate")
+                HttpHelper httpHelper = new HttpHelper("http://model.dbpedia-spotlight.org/fr/annotate")
                         .with("text", toUrlParameter(subcontent))
                         .with("confidence", dBpediaQuery.confidence)
                         .with("support", dBpediaQuery.support);
