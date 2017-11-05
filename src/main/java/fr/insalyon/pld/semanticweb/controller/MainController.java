@@ -32,7 +32,7 @@ import static fr.insalyon.pld.semanticweb.extensions.StringExt.toUrlParameter;
 import static fr.insalyon.pld.semanticweb.model.JsonObject.jsonObjectOf;
 import static fr.insalyon.pld.semanticweb.tools.Kotlin.mutableListOf;
 import static fr.insalyon.pld.semanticweb.tools.Kotlin.mutableMapOf;
-
+@CrossOrigin
 @Controller
 public class MainController {
 
