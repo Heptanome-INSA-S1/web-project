@@ -9,8 +9,8 @@ public class Film {
     private double gross;
     private Date publicationDate;
     private Personne[] actors;
-    private Personne[] realisators;
-    private Personne[] productors;
+    private Personne[] directors;
+    private Personne[] producers;
     private String synopsis;
     private Duration duration;
     private String type; //String ou class Type ??
@@ -55,20 +55,20 @@ public class Film {
         this.actors = actors;
     }
 
-    public Personne[] getRealisators() {
-        return realisators;
+    public Personne[] getDirectors() {
+        return directors;
     }
 
-    public void setRealisators(Personne[] realisators) {
-        this.realisators = realisators;
+    public void setDirectors(Personne[] directors) {
+        this.directors = directors;
     }
 
-    public Personne[] getProductors() {
-        return productors;
+    public Personne[] getProducers() {
+        return producers;
     }
 
-    public void setProductors(Personne[] productors) {
-        this.productors = productors;
+    public void setProducers(Personne[] producers) {
+        this.producers = producers;
     }
 
     public String getSynopsis() {

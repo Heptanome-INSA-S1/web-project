@@ -24,5 +24,20 @@ public class SchemaLinker {
         public List<String> typePredicates = Arrays.asList("dbo:Actor");
         public List<String> namePredicates = Arrays.asList("dbo:birthName","foaf:name","rdfs:label");
         public List<String> playInPredicates = Arrays.asList("dbo:movie");
+        public List<String> nationalityPredicates = Arrays.asList("dbo:nationality");
+        public List<String> jobPredicates = Arrays.asList("dbo:profession");
+    }
+
+    public static class Film{
+        public List<String> typePredicates = Arrays.asList("dbo:Film");
+        public List<String> namePredicates = Arrays.asList("dbo:label", "dbo:originalTitle", "foaf:name");
+        /*public List<String> budgetPredicates = Arrays.asList();
+        public List<String> publicationDate=;-- Predicats non trouves*/
+        public List<String> actorsPredicates = Arrays.asList("dbo:starring");
+        public List<String> durationPredicates = Arrays.asList("dbo:filmRuntime");
+        public List<String> directorsPredicates = Arrays.asList("dbo:director");
+        //public List<String> producersPredicates = Arrays.asList();
+        public List<String> synopsisPredicates = Arrays.asList("dbo:abstract", "rdfs:comment");
+        public List<String> genrePredicates = Arrays.asList("dbo:genre");
     }
 }
