@@ -2,9 +2,11 @@ package fr.insalyon.pld.semanticweb.tools;
 
 import fr.insalyon.pld.semanticweb.model.Annotation;
 import fr.insalyon.pld.semanticweb.model.SearchLink;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.HttpConnection;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 
@@ -18,10 +20,11 @@ import java.util.stream.Collectors;
 import static fr.insalyon.pld.semanticweb.extensions.CollectionExt.flatten;
 import static java.lang.Integer.valueOf;
 
-public class HttpHelper {
+public class HttpHelper implements KotlinClass<HttpHelper> {
 
     public final String urlName;
     private final Map<String, Object> parameters = new HashMap<>();
+    private final Map<String, String> headers = new HashMap<>();
 
     public HttpHelper() {
         this.urlName = "";
@@ -29,6 +32,35 @@ public class HttpHelper {
 
     public HttpHelper(String urlName) {
         this.urlName = urlName;
+    }
+
+    public static HttpHelper httpHelper(String url) {
+        return new HttpHelper(url);
+    }
+
+    protected HttpHelper clone() {
+        HttpHelper clone = new HttpHelper(urlName);
+        clone.parameters.putAll(parameters);
+        clone.headers.putAll(headers);
+        return clone;
+    }
+
+    public String url() {
+        final StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(urlName);
+        if(!parameters.isEmpty()) {
+            stringBuilder.append("?");
+        }
+        parameters.forEach( (key, value) -> {
+            stringBuilder.append(key);
+            stringBuilder.append("=");
+            stringBuilder.append(toUrlParameter(Objects.toString(value)));
+            stringBuilder.append("&");
+        });
+        if(!parameters.isEmpty()) {
+            stringBuilder.setLength(stringBuilder.length() - "&".length());
+        }
+        return stringBuilder.toString();
     }
 
     private String buildUrl() {
@@ -59,13 +91,40 @@ public class HttpHelper {
 
     }
 
-    public HttpHelper with(String parameterName, Object parameterValue) {
-
-        HttpHelper result = new HttpHelper(urlName);
-        parameters.forEach(result.parameters::put);
+    public HttpHelper queryParam(String parameterName, Object parameterValue) {
+        HttpHelper result = clone();
         result.parameters.put(parameterName, parameterValue);
         return result;
+    }
 
+    public HttpHelper header(String key, String value) {
+        HttpHelper clone = clone();
+        clone.headers.put(key, value);
+        return clone;
+    }
+
+    public Connection.Response getResponse() {
+        Connection connection = Jsoup.connect(url());
+        for(Map.Entry<String, String> header : headers.entrySet()) {
+            connection = connection.header(header.getKey(), header.getValue());
+        }
+        try {
+            return connection.execute();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Document getDocument() {
+        try {
+            return getResponse().parse();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Element getBody() {
+        return getDocument().body();
     }
 
     public List<SearchLink> getLinks() throws IOException, XPathExpressionException {
@@ -149,6 +208,13 @@ public class HttpHelper {
                 .childNodes()
                 .forEach(it -> str.append(toString(it)));
         return str.toString();
+    }
+    private static String toUrlParameter(String string) {
+        try {
+            return URLEncoder.encode(string, "UTF-8");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
