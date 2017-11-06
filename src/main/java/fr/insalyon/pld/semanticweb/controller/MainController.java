@@ -33,7 +33,7 @@ import static fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilderImpl.se
 import static fr.insalyon.pld.semanticweb.tools.HttpHelper.httpHelper;
 import static fr.insalyon.pld.semanticweb.tools.Kotlin.mutableListOf;
 import static fr.insalyon.pld.semanticweb.tools.Kotlin.mutableMapOf;
-
+@CrossOrigin
 @Controller
 public class MainController {
 
