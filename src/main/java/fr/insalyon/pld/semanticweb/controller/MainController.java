@@ -5,31 +5,32 @@ import fr.insalyon.pld.semanticweb.model.Annotation;
 import fr.insalyon.pld.semanticweb.model.DBpediaQuery;
 import fr.insalyon.pld.semanticweb.model.JsonObject;
 import fr.insalyon.pld.semanticweb.model.SearchLink;
+import fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker.Actor;
+import fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker.TVShow;
 import fr.insalyon.pld.semanticweb.tools.HttpHelper;
-import fr.insalyon.pld.semanticweb.tools.Kotlin;
 import javafx.util.Pair;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.FileUtils;
-import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.jsoup.helper.HttpConnection;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-import static fr.insalyon.pld.semanticweb.extensions.CollectionExt.toSet;
 import static fr.insalyon.pld.semanticweb.extensions.StringExt.splitOfLength;
 import static fr.insalyon.pld.semanticweb.extensions.StringExt.toUrlParameter;
 import static fr.insalyon.pld.semanticweb.model.JsonObject.jsonObjectOf;
+import static fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker.IS;
+import static fr.insalyon.pld.semanticweb.model.tuple.Triplet.tripletOf;
+import static fr.insalyon.pld.semanticweb.services.sparqldsl.Filter.like;
+import static fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilderImpl.select;
+import static fr.insalyon.pld.semanticweb.tools.HttpHelper.httpHelper;
 import static fr.insalyon.pld.semanticweb.tools.Kotlin.mutableListOf;
 import static fr.insalyon.pld.semanticweb.tools.Kotlin.mutableMapOf;
 
@@ -54,9 +55,9 @@ public class MainController {
     ) throws IOException, XPathExpressionException {
 
         final HttpHelper httpHelper = new HttpHelper("https://www.google.fr/search")
-                .with("q", query)
-                .with("start", offset);
-        if(query.isEmpty()) {
+                .queryParam("q", query)
+                .queryParam("start", offset);
+        if (query.isEmpty()) {
             return new ArrayList<>();
         } else {
             return httpHelper.getLinks();
@@ -82,12 +83,12 @@ public class MainController {
         dBpediaQuery.resources.forEach(searchLink -> {
 
             response.put(searchLink.url, mutableListOf());
-            splitOfLength(searchLink.content, 2048).forEach( subcontent -> {
+            splitOfLength(searchLink.content, 2048).forEach(subcontent -> {
 
                 HttpHelper httpHelper = new HttpHelper("http://model.dbpedia-spotlight.org/fr/annotate")
-                        .with("text", toUrlParameter(subcontent))
-                        .with("confidence", dBpediaQuery.confidence)
-                        .with("support", dBpediaQuery.support);
+                        .queryParam("text", toUrlParameter(subcontent))
+                        .queryParam("confidence", dBpediaQuery.confidence)
+                        .queryParam("support", dBpediaQuery.support);
 
                 ((List<Annotation>) response.get(searchLink.url)).addAll(httpHelper.getAnnotations());
 
@@ -108,6 +109,45 @@ public class MainController {
         return toCleanJson(ModelFactory.createDefaultModel().read(searchLink.url));
     }
 
+    @RequestMapping("/autocomplete")
+    @ResponseBody
+    Object autocomplete() {
+
+        String query = select("?serie")
+                .where(
+                        tripletOf("?serie", IS, TVShow.type),
+                        tripletOf("?serie", TVShow.hasName, "?showName"),
+                        like("?showName", "^game of")
+                ).limit(5).build();
+
+        return httpHelper("http://dbpedia.org/sparql")
+                .queryParam("default-graph-uri", "http://dbpedia.org")
+                .queryParam("query", query)
+                .queryParam("timeout", 1000)
+                .queryParam("format", "application/rdf+xml")
+                .queryParam("debug", "off")
+                .also(it -> System.out.println(it.url()))
+                .getDocument().getElementsByTag("res:value").stream().map(it -> it.attr("rdf:resource")).collect(Collectors.toList());
+    }
+
+    @RequestMapping("/test")
+    @ResponseBody
+    Object test() {
+
+        return toHtml(
+                select("?serie ?actor")
+                .where(
+                        tripletOf("?serie", IS, TVShow.type),
+                        tripletOf("?serie", TVShow.hasName, "?showName"),
+                        tripletOf("?actor", IS, Actor.type),
+                        tripletOf("?serie", TVShow.hasActor, "?actor"),
+                        like("?showName", "^Game of")
+                )
+                .orderAsc("?serie").orderDesc("?actor")
+                .limit(20)
+                .build());
+    }
+
     private JsonObject toCleanJson(Model self) {
 
         JsonObject jsonObject = jsonObjectOf();
@@ -118,10 +158,11 @@ public class MainController {
             subject.listProperties().forEachRemaining(triplet -> {
                 String predicateName = triplet.getPredicate().getNameSpace() + triplet.getPredicate().getLocalName();
                 try {
-                    if(!triplet.getLanguage().isEmpty()) {
+                    if (!triplet.getLanguage().isEmpty()) {
                         predicateName += "[@" + triplet.getLanguage() + "]";
                     }
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
                 properties.add(
                         jsonObjectOf(new Pair<>(predicateName, triplet.getObject().toString()))
                 );
@@ -133,6 +174,14 @@ public class MainController {
         return jsonObject;
 
 
+    }
+
+    private String toHtml(String self) {
+        return self
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll("\n", "<br/>")
+                .replaceAll(" ", "&nbsp;");
     }
 
 }
