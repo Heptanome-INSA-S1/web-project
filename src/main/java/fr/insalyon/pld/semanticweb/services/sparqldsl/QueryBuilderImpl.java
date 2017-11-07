@@ -1,5 +1,6 @@
 package fr.insalyon.pld.semanticweb.services.sparqldsl;
 
+import fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker;
 import fr.insalyon.pld.semanticweb.tools.KotlinClass;
 
 public class QueryBuilderImpl implements QueryBuilderWhere, QueryBuilderUnion {
@@ -157,6 +158,25 @@ public class QueryBuilderImpl implements QueryBuilderWhere, QueryBuilderUnion {
     public QueryBuilderLimit orderDesc(String column) {
         if(orderBy == null) return new QueryBuilderImpl(selectClause, whereClause, limit, offset, "DESC(" + column + ")");
         else return new QueryBuilderImpl(selectClause, whereClause, limit, offset, orderBy + " " +"DESC(" + column + ")");
+    }
+
+    @Override
+    public String buildWithPrefix() {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        SchemaLinker.get().namespace.forEach((prefix, uri) -> {
+
+            stringBuilder.append("PREFIX ")
+                    .append(prefix)
+                    .append(": ")
+                    .append("<")
+                    .append(uri)
+                    .append(">\n");
+
+        });
+
+        stringBuilder.append(build());
+        return stringBuilder.toString();
     }
 
     public String build() {

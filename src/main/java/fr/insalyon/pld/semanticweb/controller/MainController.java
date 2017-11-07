@@ -5,13 +5,18 @@ import fr.insalyon.pld.semanticweb.model.Annotation;
 import fr.insalyon.pld.semanticweb.model.DBpediaQuery;
 import fr.insalyon.pld.semanticweb.model.JsonObject;
 import fr.insalyon.pld.semanticweb.model.SearchLink;
+import fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker;
 import fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker.Actor;
 import fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker.TVShow;
 import fr.insalyon.pld.semanticweb.tools.HttpHelper;
 import javafx.util.Pair;
 import org.apache.commons.io.FileUtils;
+import org.apache.jena.Jena;
+import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdfconnection.RDFConnection;
+import org.apache.jena.rdfconnection.RDFConnectionFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +38,7 @@ import static fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilderImpl.se
 import static fr.insalyon.pld.semanticweb.tools.HttpHelper.httpHelper;
 import static fr.insalyon.pld.semanticweb.tools.Kotlin.mutableListOf;
 import static fr.insalyon.pld.semanticweb.tools.Kotlin.mutableMapOf;
+
 @CrossOrigin
 @Controller
 public class MainController {
@@ -130,22 +136,18 @@ public class MainController {
                 .getDocument().getElementsByTag("res:value").stream().map(it -> it.attr("rdf:resource")).collect(Collectors.toList());
     }
 
-    @RequestMapping("/test")
+    @RequestMapping(value = "/test", produces = "application/json")
     @ResponseBody
     Object test() {
 
-        return toHtml(
-                select("?serie ?actor")
-                .where(
-                        tripletOf("?serie", IS, TVShow.type),
-                        tripletOf("?serie", TVShow.hasName, "?showName"),
-                        tripletOf("?actor", IS, Actor.type),
-                        tripletOf("?serie", TVShow.hasActor, "?actor"),
-                        like("?showName", "^Game of")
-                )
-                .orderAsc("?serie").orderDesc("?actor")
-                .limit(20)
-                .build());
+        List<String> resources = new ArrayList<>();
+        RDFConnection conn = RDFConnectionFactory.connect("http://www.linkedmdb.org/");
+
+        String query = select("?movie").where( tripletOf("?movie", IS, "movie:film")).limit(10).buildWithPrefix();
+        conn.querySelect(query,solution -> {
+            resources.add(solution.getResource("?movie").toString());
+        });
+        return resources;
     }
 
     private JsonObject toCleanJson(Model self) {

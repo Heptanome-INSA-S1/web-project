@@ -9,7 +9,7 @@ public class SchemaLinker {
 
     public static String IS = "rdf:type";
 
-    private Map<String, String> namespace = new HashMap<>();
+    public Map<String, String> namespace = new HashMap<>();
     private static SchemaLinker instance = null;
 
     public static SchemaLinker get() {
@@ -28,6 +28,7 @@ public class SchemaLinker {
         namespace.put("yago",     "http://yago-knowledge.org/resource/");
         namespace.put("umbel-rc", "http://umbel.org/umbel/rc/");
         namespace.put("dbp",      "http://dbpedia.org/property/");
+        namespace.put("movie",    "http://data.linkedmdb.org/resource/movie/");
     }
 
     public String namespace(String prefix) {

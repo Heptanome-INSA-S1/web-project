@@ -65,7 +65,6 @@ public class MovieRepository implements SPARQLRepository<Movie> {
 
     @Override
     public Movie hydrate(Document document) {
-
         String frenchName = orNull(() -> document.getElementsByTag("rdfs:label").stream().filter(it -> it.attr("xml:lang").equals("fr")).collect(Collectors.toList()).get(0).text());
         String englishName = orNull(() -> document.getElementsByTag("rdfs:label").stream().filter(it -> it.attr("xml:lang").equals("en")).collect(Collectors.toList()).get(0).text());
         Double gross = orNull(() -> Double.valueOf(document.getElementsByTag("dbo:gross").get(0).text().replace("E", "E+")));
