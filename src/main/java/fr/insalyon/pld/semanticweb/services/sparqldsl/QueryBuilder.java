@@ -5,6 +5,7 @@ import fr.insalyon.pld.semanticweb.tools.KotlinClass;
 public interface QueryBuilder {
 
     String build();
+    String buildWithPrefix();
 
 }
 
