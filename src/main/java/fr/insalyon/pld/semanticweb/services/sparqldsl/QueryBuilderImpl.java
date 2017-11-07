@@ -1,7 +1,6 @@
 package fr.insalyon.pld.semanticweb.services.sparqldsl;
 
 import fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker;
-import fr.insalyon.pld.semanticweb.tools.KotlinClass;
 
 public class QueryBuilderImpl implements QueryBuilderWhere, QueryBuilderUnion {
 
@@ -89,7 +88,7 @@ public class QueryBuilderImpl implements QueryBuilderWhere, QueryBuilderUnion {
 
     @Override
     public QueryBuilderUnion where(Condition... conditions) {
-        if(conditions.length == 0) throw new RuntimeException("conditions.legth must be >= 1");
+        if(conditions.length == 0) throw new RuntimeException("conditions.length must be >= 1");
         StringBuilder stringBuilder = new StringBuilder();
         for(int i =0; i < conditions.length; i++) {
             stringBuilder.append(conditions[i].toSparqlCondition())
@@ -97,6 +96,11 @@ public class QueryBuilderImpl implements QueryBuilderWhere, QueryBuilderUnion {
         }
         String newWhereClause = this.whereClause + stringBuilder.toString();
         return new QueryBuilderImpl(selectClause, newWhereClause, limit, offset);
+    }
+
+    @Override
+    public String getSelectClause() {
+        return selectClause;
     }
 
     public static class Keywords {

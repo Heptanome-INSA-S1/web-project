@@ -28,13 +28,12 @@ public class MovieController {
         } else {
             throw new RuntimeException("Impossible to reach this uri: " + uri + " at the resource path " + SPARQLRepository.defaultResourcePath);
         }
-
     }
 
     @RequestMapping("/movies")
     public @ResponseBody
-    List<Movie> index(@RequestParam(value = "q", required = false) String query) {
-
+    List<Movie> index(@RequestParam(value = "name", required = false) String query,
+                      @RequestParam(value = "short", required = false, defaultValue = "true") String isShort){
         if (null == query) {
             return movieRepository.findAll();
         } else {

@@ -1,11 +1,13 @@
 package fr.insalyon.pld.semanticweb.repositories;
 
-import fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilderWhere;
+import fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilder;
+import org.apache.jena.rdfconnection.RDFConnection;
+import org.apache.jena.rdfconnection.RDFConnectionFactory;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -18,9 +20,20 @@ public interface SPARQLRepository<M> {
 
     String defaultResourcePath = "http://dbpedia.org/resource/";
 
-    default List<List<String>> execute(String query) {
+    default List<List<String>> execute(QueryBuilder query) {
 
-        List<List<String>> rows = new ArrayList<>();
+        List<List<String>> result = new ArrayList<>();
+        RDFConnection conn = RDFConnectionFactory.connect("http://www.linkedmdb.org/");
+
+
+        List<String> resources = Arrays.asList(query.getSelectClause().split(" ")).stream().filter(string -> !string.isEmpty()).collect(Collectors.toList());
+        conn.querySelect(query.buildWithPrefix(),solution -> {
+            List<String> row = new ArrayList<>();
+            resources.forEach(resourceName -> row.add(solution.getResource(resourceName).getURI()));
+            result.add(row);
+        });
+
+        /*List<List<String>> rows = new ArrayList<>();
         httpHelper("http://dbpedia.org/sparql")
                 .queryParam("default-graph-uri", "http://dbpedia.org")
                 .queryParam("query", query)
@@ -34,12 +47,12 @@ public interface SPARQLRepository<M> {
                         row.add(value.attr("rdf:resource"));
                     });
                     rows.add(row);
-                });
-        return rows;
+                });*/
+        return result;
 
     }
 
-    default List<List<Supplier<Document>>> fetch(String query) {
+    default List<List<Supplier<Document>>> fetch(QueryBuilder query) {
         return execute(query)
                 .stream()
                 .map(list ->
@@ -49,7 +62,7 @@ public interface SPARQLRepository<M> {
                 .collect(Collectors.toList());
     }
 
-    default List<List<Supplier<M>>> fetchAndTransform(String query) {
+    default List<List<Supplier<M>>> fetchAndTransform(QueryBuilder query) {
         return fetch(query)
                 .stream()
                 .map(list ->

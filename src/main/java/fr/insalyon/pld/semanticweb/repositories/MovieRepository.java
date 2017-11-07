@@ -2,20 +2,19 @@ package fr.insalyon.pld.semanticweb.repositories;
 
 import fr.insalyon.pld.semanticweb.entities.Movie;
 import fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker;
-import fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilderWhere;
+import fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilder;
 import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker.*;
 import static fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker.IS;
 import static fr.insalyon.pld.semanticweb.model.tuple.Triplet.tripletOf;
 import static fr.insalyon.pld.semanticweb.services.sparqldsl.Filter.hasUri;
-import static fr.insalyon.pld.semanticweb.services.sparqldsl.Filter.lang;
 import static fr.insalyon.pld.semanticweb.services.sparqldsl.Filter.like;
 import static fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilderImpl.select;
 
@@ -25,12 +24,11 @@ public class MovieRepository implements SPARQLRepository<Movie> {
     @Override
     public Optional<Movie> findById(String uri) {
 
-        String query = select("?movie")
+        QueryBuilder query = select("?movie")
                 .where(
                         tripletOf("?movie", IS, SchemaLinker.Movie.type),
                         hasUri("?movie", defaultResourcePath + uri)
-                ).limit(1)
-                .build();
+                ).limit(1);
 
         List<List<Supplier<Movie>>> resultSet = fetchAndTransform(query);
         if(resultSet.isEmpty()) return Optional.empty();
@@ -44,7 +42,7 @@ public class MovieRepository implements SPARQLRepository<Movie> {
                 select("?movie")
                 .where(
                         tripletOf("?movie", IS, SchemaLinker.Movie.type)
-                ).limit(20).build()
+                ).limit(20)
         ).forEach(row -> row.forEach(lazyMove -> movies.add(lazyMove.get())));
         return movies;
     }
@@ -53,12 +51,12 @@ public class MovieRepository implements SPARQLRepository<Movie> {
     public List<Movie> findByName(String name) {
         List<Movie> movies = new ArrayList<>();
         fetchAndTransform(
-                select("?movie")
+                select("?movie, ?actor")
                         .where(
                                 tripletOf("?movie", IS, SchemaLinker.Movie.type),
                                 tripletOf("?movie", SchemaLinker.Movie.hasName, "?name"),
                                 like("?name", "^" + name)
-                        ).build()
+                        )
         ).forEach(row -> row.forEach(lazyMove -> movies.add(lazyMove.get())));
         return movies;
     }
