@@ -51,7 +51,7 @@ public class MovieRepository implements SPARQLRepository<Movie> {
     public List<Movie> findByName(String name) {
         List<Movie> movies = new ArrayList<>();
         fetchAndTransform(
-                select("?movie, ?actor")
+                select("?movie")
                         .where(
                                 tripletOf("?movie", IS, SchemaLinker.Movie.type),
                                 tripletOf("?movie", SchemaLinker.Movie.hasName, "?name"),
