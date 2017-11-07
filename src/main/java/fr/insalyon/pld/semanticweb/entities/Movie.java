@@ -1,25 +1,13 @@
 package fr.insalyon.pld.semanticweb.entities;
 
+import java.net.URI;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-public class Movie {
+public class Movie extends Work {
 
-    public final String uri;
-    public final String frenchName;
-    public final String englishName;
-    public final Double gross;
-    public final Double budget;
-    public final String englishSynopsis;
-    public final String frenchSynopsis;
-
-    public Movie(String uri, String englishName, String frenchName, Double gross, Double budget, String englishSynopsis, String frenchSynopsis) {
-        this.uri = uri;
-        this.frenchName = frenchName;
-        this.englishName = englishName;
-        this.gross = gross;
-        this.budget = budget;
-        this.englishSynopsis = englishSynopsis;
-        this.frenchSynopsis = frenchSynopsis;
+    public Movie(String uri, String poster, String title, Date releaseDate, String plot, int runtime, List<URI> artists, List<URI> genres, List<URI> directors, double gross, double budget) {
+        super(uri, poster, title, releaseDate, plot, runtime, artists, genres, directors, gross, budget);
     }
 }
