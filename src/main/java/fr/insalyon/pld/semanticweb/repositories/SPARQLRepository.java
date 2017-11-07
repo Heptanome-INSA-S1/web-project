@@ -4,6 +4,7 @@ import fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilder;
 import org.apache.jena.rdfconnection.RDFConnection;
 import org.apache.jena.rdfconnection.RDFConnectionFactory;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -18,46 +19,43 @@ import static fr.insalyon.pld.semanticweb.tools.HttpHelper.httpHelper;
 @Component
 public interface SPARQLRepository<M> {
 
-    String defaultResourcePath = "http://dbpedia.org/resource/";
+    String HTTP_DBPEDIA_ORG = "http://dbpedia.org/";
+    String HTTP_WWW_LINKEDMDB_ORG = "http://www.linkedmdb.org/";
+    String HTTP_DATA_LINKEDMDB_ORG = "http://data.linkedmdb.org/";
 
     default List<List<String>> execute(QueryBuilder query) {
 
         List<List<String>> result = new ArrayList<>();
-        RDFConnection conn = RDFConnectionFactory.connect("http://www.linkedmdb.org/");
-
+        RDFConnection imdbConnection = RDFConnectionFactory.connect(HTTP_WWW_LINKEDMDB_ORG);
+        RDFConnection dbpediaConnection = RDFConnectionFactory.connect(HTTP_DBPEDIA_ORG);
 
         List<String> resources = Arrays.asList(query.getSelectClause().split(" ")).stream().filter(string -> !string.isEmpty()).collect(Collectors.toList());
-        conn.querySelect(query.buildWithPrefix(),solution -> {
+        imdbConnection.querySelect(query.buildWithPrefix(),solution -> {
             List<String> row = new ArrayList<>();
             resources.forEach(resourceName -> row.add(solution.getResource(resourceName).getURI()));
             result.add(row);
         });
 
-        /*List<List<String>> rows = new ArrayList<>();
-        httpHelper("http://dbpedia.org/sparql")
-                .queryParam("default-graph-uri", "http://dbpedia.org")
-                .queryParam("query", query)
-                .queryParam("timeout", 1000)
-                .queryParam("format", "application/rdf+xml")
-                .queryParam("debug", "off")
-                .also(it -> System.out.println(it.url()))
-                .getDocument().getElementsByTag("res:solution").forEach(solution -> {
-                    List<String> row = new ArrayList<>();
-                    solution.getElementsByTag("res:value").forEach(value -> {
-                        row.add(value.attr("rdf:resource"));
-                    });
-                    rows.add(row);
-                });*/
+        dbpediaConnection.querySelect(query.buildWithPrefix(), solution -> {
+            List<String> row = new ArrayList<>();
+            resources.forEach(resourceName -> row.add(solution.getResource(resourceName).getURI()));
+            result.add(row);
+        });
+
+        System.out.println("'" + query.getSelectClause() + "'");
+        System.out.println(query.buildWithPrefix());
+
         return result;
 
     }
+
 
     default List<List<Supplier<Document>>> fetch(QueryBuilder query) {
         return execute(query)
                 .stream()
                 .map(list ->
                         list.stream()
-                                .map(uri -> (Supplier<Document>) () -> httpHelper(uri).header("Accept", "application/rdf+xml").getDocument())
+                                .map(uri -> (Supplier<Document>) () -> httpHelper(uri).header("Accept", "application/rdf+xml,application/xml").getDocument())
                                 .collect(Collectors.toList()))
                 .collect(Collectors.toList());
     }
@@ -77,6 +75,7 @@ public interface SPARQLRepository<M> {
     List<M> findByName(String name);
     M hydrate(Document document);
 
+
     default <E> E orNull(Supplier<E> supplier) {
 
         try {
@@ -86,5 +85,23 @@ public interface SPARQLRepository<M> {
         }
 
     }
+
+    default <E> List<E> orEmpty(Supplier<List<E>> supplier) {
+        try {
+            return supplier.get();
+        } catch (Exception ignored) {
+            return new ArrayList<>();
+        }
+    }
+
+    default Element getElementByFilteredTag(Document document, String tag, String attribute, String filter) {
+        
+        return document
+                .getElementsByTag(tag)
+                .stream()
+                .filter(marker -> marker.attr(attribute).equals(filter)).collect(Collectors.toList()).get(0);
+        
+    }
+
 
 }

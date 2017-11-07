@@ -26,7 +26,7 @@ public class MovieController {
         if(filmOptional.isPresent()) {
             return filmOptional.get();
         } else {
-            throw new RuntimeException("Impossible to reach this uri: " + uri + " at the resource path " + SPARQLRepository.defaultResourcePath);
+            throw new RuntimeException("Impossible to reach this uri: " + uri + " at the resource path " + SPARQLRepository.HTTP_DBPEDIA_ORG);
         }
     }
 
