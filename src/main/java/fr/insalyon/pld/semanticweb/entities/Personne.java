@@ -3,22 +3,23 @@ package fr.insalyon.pld.semanticweb.entities;
 import java.util.Date;
 
 public class Personne {
-    private Date birthDate;
-    private Label[] labels;
 
-    public Date getBirthDate() {
-        return birthDate;
+    public final String name;
+    public final String firstname;
+    public final String birthDay;
+    public final String deathDay;
+
+    public Personne(String name, String firstname, String birthDay, String deathDay){
+        this.name = name;
+        this.firstname = firstname;
+        this.birthDay = birthDay;
+        this.deathDay = deathDay;
     }
 
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public Label[] getLabels() {
-        return labels;
-    }
-
-    public void setLabels(Label[] labels) {
-        this.labels = labels;
+    public Personne(String name, String firstname, String birthDay){
+        this.name = name;
+        this.firstname = firstname;
+        this.birthDay = birthDay;
+        this.deathDay = null;
     }
 }
