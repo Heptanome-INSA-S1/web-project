@@ -3,7 +3,7 @@ package fr.insalyon.pld.semanticweb.entities;
 import java.util.List;
 import java.util.Set;
 
-public class Movie implements Model {
+public class Movie {
 
     public final String uri;
     public final String frenchName;

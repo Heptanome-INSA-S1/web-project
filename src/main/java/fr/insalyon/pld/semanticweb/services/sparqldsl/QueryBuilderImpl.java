@@ -45,7 +45,7 @@ public class QueryBuilderImpl implements QueryBuilderWhere, QueryBuilderUnion {
 
     @Override
     public QueryBuilderUnion union(Condition... conditions) {
-        if(conditions.length == 0) throw new RuntimeException("conditions.legth must be >= 1");
+        if(conditions.length == 0) throw new RuntimeException("conditions.length must be >= 1");
         StringBuilder stringBuilder = new StringBuilder();
         for(int i =0; i < conditions.length; i++) {
             stringBuilder.append(conditions[i].toSparqlCondition())
