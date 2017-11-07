@@ -65,19 +65,29 @@ public class MovieRepository implements SPARQLRepository<Movie> {
 
     @Override
     public Movie hydrate(Document document) {
-        String poster = null;
+        String poster = null; // pas trouvé sur dbpedia, TODO
+        
         String frenchName = orNull(() -> document.getElementsByTag("rdfs:label").stream().filter(it -> it.attr("xml:lang").equals("fr")).collect(Collectors.toList()).get(0).text());
         String englishName = orNull(() -> document.getElementsByTag("rdfs:label").stream().filter(it -> it.attr("xml:lang").equals("en")).collect(Collectors.toList()).get(0).text());
         String title = (frenchName == null ? englishName : frenchName);
-        Date releaseDate = null;
+        
+        Date releaseDate = null; // pas trouvé sur dbpedia, TODO
+        
         Double gross = orNull(() -> Double.valueOf(document.getElementsByTag("dbo:gross").get(0).text().replace("E", "E+")));
+        
         Double budget = orNull(() -> Double.valueOf(document.getElementsByTag("dbo:budget").get(0).text().replace("E", "E+")));
+        
         String uri = document.baseUri();
+        
         String enSynopsis = orNull(() -> document.getElementsByTag("dbo:abstract").stream().filter(it -> it.attr("xml:lang").equals("en")).collect(Collectors.toList()).get(0).text());
         String frSynopsis = orNull(() -> document.getElementsByTag("dbo:abstract").stream().filter(it -> it.attr("xml:lang").equals("fr")).collect(Collectors.toList()).get(0).text());
         String plot = (frSynopsis == null ? enSynopsis : frSynopsis);
+        
         Double runtime = orNull(() -> Double.valueOf(document.getElementsByTag("dbo:runtime").get(0).text().replace("E", "E+")));
+        
         List<String> actors = orNull(() -> document.getElementsByTag("dbo:starring").stream().map(element -> element.attr("rdf:resource")).collect(Collectors.toList()));
+        
+        String directors = orNull(() -> document.getElementsByTag("dbo:sdirector").stream().map(element -> element.attr("rdf:resource")).collect(Collectors.toList()));
         
         return new Movie(uri, poster, title, releaseDate, plot, runtime, actors, genres, directors, gross, budget);
     }
