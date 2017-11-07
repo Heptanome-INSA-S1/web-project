@@ -42,6 +42,9 @@ public interface SPARQLRepository<M> {
             result.add(row);
         });
 
+        System.out.println("'" + query.getSelectClause() + "'");
+        System.out.println(query.buildWithPrefix());
+
         return result;
 
     }
@@ -81,6 +84,14 @@ public interface SPARQLRepository<M> {
             return null;
         }
 
+    }
+
+    default <E> List<E> orEmpty(Supplier<List<E>> supplier) {
+        try {
+            return supplier.get();
+        } catch (Exception ignored) {
+            return new ArrayList<>();
+        }
     }
 
     default Element getElementByFilteredTag(Document document, String tag, String attribute, String filter) {

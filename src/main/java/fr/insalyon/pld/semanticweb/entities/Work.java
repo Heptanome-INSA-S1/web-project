@@ -1,10 +1,10 @@
 package fr.insalyon.pld.semanticweb.entities;
 
-import java.net.URI;
+
 import java.util.Date;
 import java.util.List;
 
-public class Work implements Model{
+public class Work{
 
     public final String uri;
     public final String poster;
@@ -19,7 +19,7 @@ public class Work implements Model{
     public final double budget;
 
 
-    public Work(String uri, String poster, String title, Date releaseDate, String plot, int runtime, List<URI> artists, List<URI> genres, List<URI> directors, double gross, double budget) {
+    public Work(String uri, String poster, String title, Date releaseDate, String plot, Double runtime, List<URI> artists, List<URI> genres, List<URI> directors, double gross, double budget) {
         this.uri = uri;
         this.poster = poster;
         this.title = title;

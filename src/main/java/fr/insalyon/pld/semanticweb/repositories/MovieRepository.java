@@ -1,17 +1,18 @@
 package fr.insalyon.pld.semanticweb.repositories;
 
 import fr.insalyon.pld.semanticweb.entities.Movie;
+import fr.insalyon.pld.semanticweb.entities.URI;
 import fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker;
 import fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilder;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
 
-import java.net.URI;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker.IS;
 import static fr.insalyon.pld.semanticweb.model.tuple.Triplet.tripletOf;
@@ -88,10 +89,12 @@ public class MovieRepository implements SPARQLRepository<Movie> {
         
         Double runtime = orNull(() -> Double.valueOf(document.getElementsByTag("dbo:runtime").get(0).text().replace("E", "E+")));
         
-        List<String> actors = orNull(() -> document.getElementsByTag("dbo:starring").stream().map(element -> element.attr("rdf:resource")).collect(Collectors.toList()));
-        
-        String directors = orNull(() -> document.getElementsByTag("dbo:sdirector").stream().map(element -> element.attr("rdf:resource")).collect(Collectors.toList()));
-        
+        List<URI> actors = orEmpty(() -> document.getElementsByTag("dbo:starring").stream().map(element -> URI.from(element.attr("rdf:resource"))).collect(Collectors.toList()));
+
+        List<URI> directors = orEmpty(() -> document.getElementsByTag("dbo:sdirector").stream().map(element -> URI.from(element.attr("rdf:resource"))).collect(Collectors.toList()));
+
+        List<URI> genres = orEmpty(() -> document.getElementsByTag("dbo:genre").stream().map(element -> URI.from(element.attr("rdf:resource"))).collect(Collectors.toList()));
+
         return new Movie(uri, poster, title, releaseDate, plot, runtime, actors, genres, directors, gross, budget);
     }
 }

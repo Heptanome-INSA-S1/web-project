@@ -31,4 +31,18 @@ public class URI {
         this.database = database;
         this.uri = uri;
     }
+
+    public static URI from(String uri) {
+
+        if(uri.startsWith(Database.DBPEDIA.url)) {
+            return new URI(uri.substring(Database.DBPEDIA.url.length(), uri.length()), Database.DBPEDIA, uri);
+        } else if(uri.startsWith(Database.IMDB.url)) {
+            return new URI(uri.substring(Database.IMDB.url.length(), uri.length()), Database.IMDB, uri);
+        }
+
+        return null;
+
+    }
+
+
 }
