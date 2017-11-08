@@ -1,6 +1,5 @@
 package fr.insalyon.pld.semanticweb.entities;
 
-import java.net.URI;
 import java.util.List;
 
 public class Artist {
