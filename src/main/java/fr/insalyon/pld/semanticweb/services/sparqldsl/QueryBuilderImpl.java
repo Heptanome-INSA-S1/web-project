@@ -2,6 +2,9 @@ package fr.insalyon.pld.semanticweb.services.sparqldsl;
 
 import fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class QueryBuilderImpl implements QueryBuilderWhere, QueryBuilderUnion {
 
     private String selectClause;
@@ -183,10 +186,35 @@ public class QueryBuilderImpl implements QueryBuilderWhere, QueryBuilderUnion {
         return stringBuilder.toString();
     }
 
+    protected String buildJoinClause() {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        List<String> resources = Arrays.asList(selectClause.split(" "));
+
+        resources.forEach(resource -> {
+            String resourceName = resource.substring(1, resource.length());
+            stringBuilder.append("  { " + resource + " rdfs:label ?joinlabel"+resourceName+" }.\n");
+            stringBuilder.append("  Filter(lang(?joinlabel" + resourceName + ")=\"en\" || lang(?joinlabel" + resourceName + ")=\"\"). \n");
+        });
+
+        return stringBuilder.toString();
+    }
+
+    protected String buildJoinSelectClause() {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        List<String> resources = Arrays.asList(selectClause.split(" "));
+        resources.forEach(resource -> {
+            String resourceName = resource.substring(1, resource.length());
+            stringBuilder.append(" ?joinlabel" + resourceName + " ");
+        });
+        return stringBuilder.toString();
+    }
+
     public String build() {
         StringBuilder stringBuilder = new StringBuilder()
-                .append(Keywords.SELECT).append(Keywords.DISTINCT).append(selectClause)
-                .append(Keywords.WHERE).append("{").append(whereClause).append("}");
+                .append(Keywords.SELECT).append(Keywords.DISTINCT).append(selectClause).append(buildJoinSelectClause())
+                .append(Keywords.WHERE).append("{\n").append(whereClause).append(buildJoinClause()).append("}");
 
         if(orderBy != null) {
             stringBuilder.append(Keywords.ORDER_BY).append(orderBy).append("\n");

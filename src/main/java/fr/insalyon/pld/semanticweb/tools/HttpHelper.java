@@ -1,7 +1,7 @@
 package fr.insalyon.pld.semanticweb.tools;
 
-import fr.insalyon.pld.semanticweb.model.Annotation;
-import fr.insalyon.pld.semanticweb.model.SearchLink;
+import fr.insalyon.pld.semanticweb.model.output.Annotation;
+import fr.insalyon.pld.semanticweb.model.output.SearchLink;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.HttpConnection;

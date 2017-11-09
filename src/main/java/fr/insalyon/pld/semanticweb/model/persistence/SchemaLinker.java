@@ -43,6 +43,10 @@ public class SchemaLinker {
 
     }
 
+    public static class Person {
+        public static List<String> type = Arrays.asList("foaf:Person", "dbo:Person", "schema:Person");
+    }
+
     public static class Movie {
 
         public static String hasSynopsis = "dbo:abstract";

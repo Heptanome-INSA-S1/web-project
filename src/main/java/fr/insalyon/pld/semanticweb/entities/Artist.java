@@ -1,18 +1,15 @@
 package fr.insalyon.pld.semanticweb.entities;
 
-import java.net.URI;
 import java.util.List;
 
-public class Artist {
+public class Artist extends Person {
 
-    public final Personne information;
     public final List<URI> filmography;
     public final List<URI> bestMovies;
 
-    public Artist(Personne information, List<URI> filmography, List<URI> bestMovies){
-        this.information = information;
+    public Artist(String name, String firstName, String birthDate, String deathDate, String biography, List<URI> children, URI partner, List<URI> filmography, List<URI> bestMovies) {
+        super(name, firstName, birthDate, deathDate, biography, children, partner);
         this.filmography = filmography;
         this.bestMovies = bestMovies;
     }
-
 }

@@ -1,25 +1,24 @@
 package fr.insalyon.pld.semanticweb.entities;
 
-import java.net.URI;
 import java.util.Date;
 import java.util.List;
 
-public class Work implements Model{
+public class Work {
 
-    public final String uri;
-    public final String poster;
-    public final String title;
-    public final Date releaseDate;
-    public final String plot;
-    public final Double runtime;
-    public final List<URI> artists;
-    public final List<URI> genres;
-    public final List<URI> directors;
-    public final double gross;
-    public final double budget;
+    public List<URI> uri;
+    public String poster;
+    public String title;
+    public Date releaseDate;
+    public String plot;
+    public Double runtime;
+    public List<URI> artists;
+    public List<URI> genres;
+    public List<URI> directors;
+    public Double gross;
+    public Double budget;
 
 
-    public Work(String uri, String poster, String title, Date releaseDate, String plot, int runtime, List<URI> artists, List<URI> genres, List<URI> directors, double gross, double budget) {
+    public Work(List<URI> uri, String poster, String title, Date releaseDate, String plot, Double runtime, List<URI> artists, List<URI> genres, List<URI> directors, Double gross, Double budget) {
         this.uri = uri;
         this.poster = poster;
         this.title = title;

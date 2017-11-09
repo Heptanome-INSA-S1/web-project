@@ -4,9 +4,10 @@ import fr.insalyon.pld.semanticweb.repositories.SPARQLRepository;
 
 public class URI {
 
-    enum Database {
+    public enum Database {
         DBPEDIA("DBPedia", SPARQLRepository.HTTP_DBPEDIA_ORG),
-        IMDB("IMDb", SPARQLRepository.HTTP_DATA_LINKEDMDB_ORG);
+        LINKED_MDB("Linkedmdb", SPARQLRepository.HTTP_DATA_LINKEDMDB_ORG),
+        Unknown("unknown", "");
 
         public final String name;
         public final String url;
@@ -31,4 +32,21 @@ public class URI {
         this.database = database;
         this.uri = uri;
     }
+
+    public static URI from(String string) {
+
+        Database db;
+        if(string.startsWith(Database.DBPEDIA.url)) {
+            db = Database.DBPEDIA;
+        } else if(string.startsWith(Database.LINKED_MDB.url)) {
+            db = Database.LINKED_MDB;
+        } else {
+            db = Database.Unknown;
+        }
+
+        String anchor = string.substring(db.url.length(), string.length());
+        return new URI(anchor, db, string);
+
+    }
+
 }

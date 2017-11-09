@@ -1,4 +1,4 @@
-package fr.insalyon.pld.semanticweb.model;
+package fr.insalyon.pld.semanticweb.model.output;
 
 public class SearchLink {
 
