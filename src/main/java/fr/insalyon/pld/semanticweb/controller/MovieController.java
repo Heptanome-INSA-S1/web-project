@@ -6,6 +6,7 @@ import fr.insalyon.pld.semanticweb.repositories.mapper.MovieMapper;
 import fr.insalyon.pld.semanticweb.repositories.services.MovieRepository;
 import fr.insalyon.pld.semanticweb.repositories.SPARQLRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ResourceNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,35 +15,26 @@ import java.util.Optional;
 
 @CrossOrigin
 @Controller
-public class MovieController {
+public class MovieController extends AbstractController {
 
   @Autowired
   MovieRepository movieRepository;
   @Autowired
   MovieMapper movieMapper;
 
-  @RequestMapping(value = "/movies/{uri}", produces = "application/json")
+  @RequestMapping(value = "/movies/unique", produces = "application/json")
   public @ResponseBody
-  MovieModel getMovie(@PathVariable String uri) {
-
-    Optional<Movie> filmOptional = movieRepository.findById(uri);
-
-    if (filmOptional.isPresent()) {
-      return movieMapper.entityToFullModel(filmOptional.get());
-    } else {
-      throw new RuntimeException("Impossible to reach this uri: " + uri + " at the resource path " + SPARQLRepository.HTTP_DBPEDIA_ORG);
-    }
+  MovieModel getMovie(@RequestParam String uuid) {
+    return fetchUniqueFromRepository(uuid, movieRepository, movieMapper);
   }
 
   @RequestMapping("/movies")
   public @ResponseBody
-  List<MovieModel> index(@RequestParam(value = "name", required = false) String query,
-                    @RequestParam(value = "short", required = false, defaultValue = "true") String isShort) {
-    if (null == query) {
-      return movieMapper.entitiesToLightModels(movieRepository.findAll());
-    } else {
-      return movieMapper.entitiesToLightModels(movieRepository.findByName(query));
-    }
+  List<MovieModel> index(
+      @RequestParam(value = "name", required = false) String query,
+      @RequestParam(value = "short", required = false, defaultValue = "true") String isShort
+  ) {
+    return fetchFromRepository(query, isShort, movieRepository, movieMapper);
   }
 
 }

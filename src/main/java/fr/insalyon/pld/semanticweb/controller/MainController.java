@@ -137,19 +137,12 @@ public class MainController {
   @RequestMapping(value = "/test", produces = "application/json")
   @ResponseBody
   Object test(
-      @RequestParam(name = "uri") String uri
+      @RequestParam(name = "uuid") String uuid
   ) {
 
-    String[] splitted = uri.split("::");
-    MultiSourcedLink multiSourcedLink = new MultiSourcedLink();
-    for(int i = 0; i < splitted.length; i++) {
-      System.out.println(splitted[i]);
-      String anchor = splitted[i].split("@")[0].replaceAll("-", "/");
-      String db = splitted[i].split("@")[1];
-      URI.Database database = URI.Database.customValueOf(db);
-      multiSourcedLink.addSource(database, new URI(anchor, database, database.url + anchor));
-    }
-    return multiSourcedLink;
+    MovieRepository movieRepository = new MovieRepository();
+    return movieRepository.findById(uuid).get();
+
   }
 
   private JsonObject toCleanJson(Model self) {

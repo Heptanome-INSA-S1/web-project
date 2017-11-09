@@ -6,8 +6,12 @@ import fr.insalyon.pld.semanticweb.repositories.entities.utils.URI;
 import fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilder;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdfconnection.RDFConnectionFactory;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import static fr.insalyon.pld.semanticweb.tools.Kotlin.mutableListOf;
 
@@ -33,10 +37,11 @@ abstract public class AbstractSPARQLRepositoryImpl<E> implements SPARQLRepositor
     List<Map<String, MultiSourcedLink>> internal = new ArrayList<>();
     resources.forEach(unused -> internal.add(new HashMap<>()));
     join(dbpediaResult, URI.Database.DBPEDIA, internal, resources);
-  //  join(linkedmdbResult, URI.Database.LINKED_MDB, internal, resources);
+    //  join(linkedmdbResult, URI.Database.LINKED_MDB, internal, resources);
 
     return internal;
   }
+
   private void join(ResultSet resultSet, URI.Database from, List<Map<String, MultiSourcedLink>> result, List<String> resources) {
 
     resultSet.forEachRemaining(querySolution -> {
@@ -56,6 +61,7 @@ abstract public class AbstractSPARQLRepositoryImpl<E> implements SPARQLRepositor
     });
 
   }
+
   private CustomResultSet<MultiSourcedLink> transform(List<Map<String, MultiSourcedLink>> internalResult) {
 
     int rowCount = 0;
@@ -78,7 +84,39 @@ abstract public class AbstractSPARQLRepositoryImpl<E> implements SPARQLRepositor
 
   }
 
+  private MultiSourcedLink buildUUID(String uuid) {
 
+    String[] splitted = uuid.split("::");
+    MultiSourcedLink multiSourcedLink = new MultiSourcedLink();
+    for(int i = 0; i < splitted.length; i++) {
+      String anchor = splitted[i].split("@")[0];
+      URI.Database database = URI.Database.customValueOf(splitted[i].split("@")[1]);
+      multiSourcedLink.addSource(database, new URI(anchor, database, database.url + anchor));
+    }
 
+    return multiSourcedLink;
+
+  }
+
+  @Override
+  public Optional<E> findById(String uri) {
+    try {
+      return Optional.ofNullable(retrieve(buildUUID(uri)));
+    } catch (Exception ignored) {
+      return Optional.empty();
+    }
+  }
+
+  protected String getTextOrderByLang(Document document, String tag, List<String> languages) {
+
+    String result;
+    Elements elements = document.getElementsByTag(tag);
+    for(String lang: languages) {
+      try {
+        return elements.stream().filter(el -> el.attr("xml:lang").equals(lang)).collect(Collectors.toList()).get(0).text();
+      } catch (Exception ignored) {}
+    }
+    return null;
+  }
 
 }

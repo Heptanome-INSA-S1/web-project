@@ -11,6 +11,7 @@ import fr.insalyon.pld.semanticweb.util.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker.IS;
 import static fr.insalyon.pld.semanticweb.model.tuple.Triplet.tripletOf;
@@ -20,23 +21,6 @@ import static fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilderImpl.se
 
 @Component("MovieRepository")
 public class MovieRepository extends AbstractSPARQLRepositoryImpl<Movie> implements SPARQLRepository<Movie> {
-
-  @Override
-  public Optional<Movie> findById(String uri) {
-
-    QueryBuilder query = select("?movie")
-        .where(
-            tripletOf("?movie", IS, SchemaLinker.Movie.type),
-            hasUri("?movie", HTTP_DBPEDIA_ORG + "page/" + uri)
-        ).union(
-            tripletOf("?movie", IS, SchemaLinker.Movie.type),
-            hasUri("?movie", HTTP_DATA_LINKEDMDB_ORG + "resource/film/" + uri)
-        ).limit(1);
-
-    List<List<Lazy<Movie>>> resultSet = fetchAndTransform(query);
-    if (resultSet.isEmpty()) return Optional.empty();
-    return Optional.of(resultSet.get(0).get(0).get());
-  }
 
   @Override
   public List<Movie> findAll() {
@@ -67,27 +51,44 @@ public class MovieRepository extends AbstractSPARQLRepositoryImpl<Movie> impleme
   @Override
   public Movie hydrate(MultiSourcedDocument document) {
     String poster = null; // pas trouvé sur dbpedia, TODO
-    String frenchName = orNull(() -> getElementByFilteredTag(document.get(URI.Database.DBPEDIA), "rdfs:label", "xml:lang", "fr").text());
-    String englishName = orNull(() -> getElementByFilteredTag(document.get(URI.Database.DBPEDIA), "rdfs:label", "xml:lang", "en").text());
-    String title = (frenchName == null ? englishName : frenchName);
-    String releaseDate = null; // pas trouvé sur dbpedia, TODO
+    String title = getTextOrderByLang(document.get(URI.Database.DBPEDIA), "rdfs:label", Arrays.asList("fr", "en"));
+    String releaseDate = orNull(() ->
+        document
+            .get(URI.Database.LINKED_MDB)
+            .getElementsByTag("a").stream()
+            .filter(link -> link.attr("href").endsWith("initial_release_date"))
+            .collect(Collectors.toList())
+            .get(0).parent().nextElementSibling().getElementsByTag("span").get(0).text()
+    );
     Double gross = orNull(() -> Double.valueOf(document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:gross").get(0).text().replace("E", "E+")));
     Double budget = orNull(() -> Double.valueOf(document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:budget").get(0).text().replace("E", "E+")));
 
-    String enSynopsis = orNull(() -> getElementByFilteredTag(document.get(URI.Database.DBPEDIA), "dbo:abstract", "xml:lang", "fr").text());
-    String frSynopsis = orNull(() -> getElementByFilteredTag(document.get(URI.Database.DBPEDIA), "dbo:abstract", "xml:lang", "en").text());
-    String plot = (frSynopsis == null ? enSynopsis : frSynopsis);
+    String synopsis = getTextOrderByLang(document.get(URI.Database.DBPEDIA), "dbo:abstract", Arrays.asList("fr", "en"));
+
     Double runtime = orNull(() -> Double.valueOf(document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:runtime").get(0).text().replace("E", "E+")));
     List<URI> actors = orEmpty(() -> extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:starring"));
     List<URI> directors = orEmpty(() -> extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:director"));
+
+    directors.addAll(
+        orEmpty(() ->
+            document
+                .get(URI.Database.LINKED_MDB)
+                .getElementsByTag("a").stream()
+                .filter(link -> link.attr("href").endsWith("movie/producer"))
+                .map(element -> URI.from(element.parent().nextElementSibling().getElementsByTag("a").get(0).attr("href")))
+                .collect(Collectors.toList())
+        )
+    );
+
     List<String> genres = orEmpty(() -> null);
 
     URI dbpediaURI = orNull(() -> URI.from(document.get(URI.Database.DBPEDIA).baseUri()));
     URI linkedmdbURI = orNull(() -> URI.from(document.get(URI.Database.LINKED_MDB).baseUri()));
     List<URI> sources = new ArrayList<>();
+
     if (dbpediaURI != null) sources.add(dbpediaURI);
     if (linkedmdbURI != null) sources.add(linkedmdbURI);
 
-    return new Movie(sources, poster, title, releaseDate, plot, runtime, actors, genres, directors, gross, budget);
+    return new Movie(sources, poster, title, releaseDate, synopsis, runtime, actors, genres, directors, gross, budget);
   }
 }

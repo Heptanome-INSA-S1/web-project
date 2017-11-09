@@ -3,6 +3,7 @@ package fr.insalyon.pld.semanticweb.repositories.mapper;
 import fr.insalyon.pld.semanticweb.model.persistence.MovieModel;
 import fr.insalyon.pld.semanticweb.repositories.entities.Movie;
 import fr.insalyon.pld.semanticweb.repositories.services.ActorRepository;
+import fr.insalyon.pld.semanticweb.repositories.services.ProducerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,9 @@ public class MovieMapper implements Mapper<Movie, MovieModel> {
 
   @Autowired
   ActorRepository actorRepository;
+
+  @Autowired
+  ProducerRepository producerRepository;
 
   @Autowired
   ArtistMapper artistMapper;
@@ -26,6 +30,7 @@ public class MovieMapper implements Mapper<Movie, MovieModel> {
         entity.plot,
         new ArrayList<>(),
         entity.genres,
+        new ArrayList<>(),
         entity.gross,
         entity.budget
     );
@@ -38,8 +43,9 @@ public class MovieMapper implements Mapper<Movie, MovieModel> {
         entity.poster,
         entity.releaseDate,
         entity.plot,
-        artistMapper.entitiesToLightModels(actorRepository.retrieveFromURI(entity.artists)),
+        artistMapper.entitiesToLightModels(actorRepository.retrieveFromURI(entity.actors)),
         entity.genres,
+        artistMapper.entitiesToLightModels(producerRepository.retrieveFromURI(entity.directors)),
         entity.gross,
         entity.budget
     );

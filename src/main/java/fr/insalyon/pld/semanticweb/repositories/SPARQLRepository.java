@@ -29,7 +29,7 @@ public interface SPARQLRepository<M> {
   String HTTP_WWW_LINKEDMDB_ORG = "http://www.linkedmdb.org/";
   String HTTP_DATA_LINKEDMDB_ORG = "http://data.linkedmdb.org/";
 
-  Optional<M> findById(String uri);
+  Optional<M> findById(String uuid);
   List<M> findAll();
   List<M> findByName(String name);
 
@@ -79,20 +79,11 @@ public interface SPARQLRepository<M> {
     if(uriList == null) return new ArrayList<>();
     List<M> result = new ArrayList<>();
     uriList.forEach(uri -> {
-      Document document = httpHelper(uri.uri).header("Accept", "application/rdf+xml, application/xml").getDocument();
-      String label = orNull(() -> getElementByFilteredTag(document, "rdfs:label", "xml:lang", "en").text());
 
       try {
-        if(label == null) {
-          document.getElementsByTag("rdfs:label").get(0).text();
-        }
-        result.add(fetchAndTransform(
-            select("?x")
-                .where(
-                    tripletOf("?x", "rdfs:label", "?label"),
-                    like("?label", label)
-                ).limit(1)).get(0).get(0).get());
-
+        MultiSourcedDocument multiSourcedDocument = new MultiSourcedDocument();
+        multiSourcedDocument.put(uri.database, httpHelper(uri.uri).header("Accept", "application/rdf+xml, application/xml").getDocument());
+        result.add(hydrate(multiSourcedDocument));
       } catch (Exception ignored) {}
 
     });

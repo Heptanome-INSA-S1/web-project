@@ -23,9 +23,9 @@ public class URI {
     }
 
     public static Database customValueOf(String str) {
-      if(DBPEDIA.name.equals(str)) {
+      if(DBPEDIA.name.equalsIgnoreCase(str)) {
         return DBPEDIA;
-      } else if(LINKED_MDB.name.equals(str)) {
+      } else if(LINKED_MDB.name.equalsIgnoreCase(str)) {
         return LINKED_MDB;
       } else {
         return Unknown;

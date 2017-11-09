@@ -13,7 +13,7 @@ public interface Mapper<E, M> {
     return entities.stream().map(this::entityToLightModel).collect(Collectors.toList());
   }
 
-  default List<M> entitiesToHeavyModels(List<E> entities) {
+  default List<M> entitiesToFullModels(List<E> entities) {
     return entities.stream().map(this::entityToLightModel).collect(Collectors.toList());
   }
 
