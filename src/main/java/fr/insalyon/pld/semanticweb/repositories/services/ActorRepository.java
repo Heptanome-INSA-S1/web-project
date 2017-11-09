@@ -52,7 +52,10 @@ public class ActorRepository extends AbstractSPARQLRepositoryImpl<Artist> implem
 
   @Override
   public Artist hydrate(MultiSourcedDocument document) {
-    String fullname = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("foaf:name").get(0).text());
+    String fullname = orNull(
+        () -> document.get(URI.Database.DBPEDIA).getElementsByTag("foaf:name").get(0).text(),
+        () -> document.get(URI.Database.LINKED_MDB).getElementsByTag("rdfs:label").get(0).text()
+    );
     String birthDay = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:birthDate").get(0).text());
     String deathDay = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:deathDate").get(0).text());
     List<URI> movies = orEmpty(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:starring").parents().stream().map(element -> URI.from(element.attr("rdf:about"))).collect(Collectors.toList()));
@@ -61,7 +64,7 @@ public class ActorRepository extends AbstractSPARQLRepositoryImpl<Artist> implem
     if(biography == null) {
       biography = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:abstract").get(0).text());
     }
-    URI partner = lastOf(extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:spouse"));
+    URI partner = orNull(() -> lastOf(extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:spouse")));
 
     String lastname = orNull(() -> fullname.split(" ")[1]);
     String firstname = orNull(() -> fullname.split(" ")[0]);

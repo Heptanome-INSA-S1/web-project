@@ -51,33 +51,19 @@ public class MovieRepository extends AbstractSPARQLRepositoryImpl<Movie> impleme
   @Override
   public Movie hydrate(MultiSourcedDocument document) {
     String poster = null; // pas trouvé sur dbpedia, TODO
-    String title = getTextOrderByLang(document.get(URI.Database.DBPEDIA), "rdfs:label", Arrays.asList("fr", "en"));
-    String releaseDate = orNull(() ->
-        document
-            .get(URI.Database.LINKED_MDB)
-            .getElementsByTag("a").stream()
-            .filter(link -> link.attr("href").endsWith("initial_release_date"))
-            .collect(Collectors.toList())
-            .get(0).parent().nextElementSibling().getElementsByTag("span").get(0).text()
-    );
+    String title = orNull(() -> getTextOrderByLang(document.get(URI.Database.DBPEDIA), "rdfs:label", Arrays.asList("fr", "en")));
+    String releaseDate = orNull(() -> document.get(URI.Database.LINKED_MDB).getElementsByTag("movie:initial_release_date").get(0).text());
     Double gross = orNull(() -> Double.valueOf(document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:gross").get(0).text().replace("E", "E+")));
     Double budget = orNull(() -> Double.valueOf(document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:budget").get(0).text().replace("E", "E+")));
 
-    String synopsis = getTextOrderByLang(document.get(URI.Database.DBPEDIA), "dbo:abstract", Arrays.asList("fr", "en"));
+    String synopsis = orNull(() -> getTextOrderByLang(document.get(URI.Database.DBPEDIA), "dbo:abstract", Arrays.asList("fr", "en")));
 
     Double runtime = orNull(() -> Double.valueOf(document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:runtime").get(0).text().replace("E", "E+")));
     List<URI> actors = orEmpty(() -> extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:starring"));
     List<URI> directors = orEmpty(() -> extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:director"));
 
     directors.addAll(
-        orEmpty(() ->
-            document
-                .get(URI.Database.LINKED_MDB)
-                .getElementsByTag("a").stream()
-                .filter(link -> link.attr("href").endsWith("movie/producer"))
-                .map(element -> URI.from(element.parent().nextElementSibling().getElementsByTag("a").get(0).attr("href")))
-                .collect(Collectors.toList())
-        )
+        extractResourceFrom(document.get(URI.Database.LINKED_MDB), "movie:producer")
     );
 
     List<String> genres = orEmpty(() -> null);

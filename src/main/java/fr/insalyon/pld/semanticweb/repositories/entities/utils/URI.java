@@ -58,6 +58,9 @@ public class URI {
     }
 
     String anchor = string.substring(db.url.length(), string.length());
+    if(db == Database.LINKED_MDB) {
+      anchor.replace("/resource/", "/data/");
+    }
     return new URI(anchor, db, string);
 
   }

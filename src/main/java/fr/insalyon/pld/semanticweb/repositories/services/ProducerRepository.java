@@ -53,16 +53,19 @@ public class ProducerRepository extends AbstractSPARQLRepositoryImpl<Artist> imp
 
   @Override
   public Artist hydrate(MultiSourcedDocument document) {
-    String fullname = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("foaf:name").get(0).text());
+    String fullname = orNull(
+        () -> document.get(URI.Database.DBPEDIA).getElementsByTag("foaf:name").get(0).text(),
+        () -> document.get(URI.Database.LINKED_MDB).getElementsByTag("rdfs:label").get(0).text()
+    );
     String birthDay = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:birthDate").get(0).text());
     String deathDay = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:deathDate").get(0).text());
     List<URI> movies = orEmpty(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:producer").stream().map(element -> URI.from(element.parent().attr("rdf:about"))).collect(Collectors.toList()));
     List<URI> bestMovies = orEmpty(() -> new ArrayList<URI>(movies.subList(0, 3)));
-    String biography = getTextOrderByLang(document.get(URI.Database.DBPEDIA), "dbo:abstract", Arrays.asList("fr", "en"));
+    String biography = orNull(() -> getTextOrderByLang(document.get(URI.Database.DBPEDIA), "dbo:abstract", Arrays.asList("fr", "en")));
     if(biography == null) {
       biography = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:abstract").get(0).text());
     }
-    URI partner = lastOf(extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:spouse"));
+    URI partner = orNull(() -> lastOf(extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:spouse")));
 
     String lastname = orNull(() -> fullname.split(" ")[1]);
     String firstname = orNull(() -> fullname.split(" ")[0]);
