@@ -59,9 +59,14 @@ public class ProducerRepository extends AbstractSPARQLRepositoryImpl<Artist> imp
     );
     String birthDay = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:birthDate").get(0).text());
     String deathDay = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:deathDate").get(0).text());
-    List<URI> movies = orEmpty(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:producer").stream().map(element -> URI.from(element.parent().attr("rdf:about"))).collect(Collectors.toList()));
+    List<URI> movies = orEmpty(
+        () -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:producer").stream().map(element -> URI.from(element.parent().attr("rdf:about"))).collect(Collectors.toList()),
+        () -> document.get(URI.Database.LINKED_MDB).getElementsByTag("movie:producer").stream().map(element -> URI.from(element.parent().attr("rdf:about"))).collect(Collectors.toList())
+    );
     List<URI> bestMovies = orEmpty(() -> new ArrayList<URI>(movies.subList(0, 3)));
-    String biography = orNull(() -> getTextOrderByLang(document.get(URI.Database.DBPEDIA), "dbo:abstract", Arrays.asList("fr", "en")));
+    String biography = orNull(
+        () -> getTextOrderByLang(document.get(URI.Database.DBPEDIA), "dbo:abstract", Arrays.asList("fr", "en"))
+    );
     if(biography == null) {
       biography = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:abstract").get(0).text());
     }

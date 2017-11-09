@@ -51,16 +51,28 @@ public class MovieRepository extends AbstractSPARQLRepositoryImpl<Movie> impleme
   @Override
   public Movie hydrate(MultiSourcedDocument document) {
     String poster = null; // pas trouvé sur dbpedia, TODO
-    String title = orNull(() -> getTextOrderByLang(document.get(URI.Database.DBPEDIA), "rdfs:label", Arrays.asList("fr", "en")));
+    String title = orNull(
+        () -> getTextOrderByLang(document.get(URI.Database.DBPEDIA), "rdfs:label", Arrays.asList("fr", "en")),
+        () -> document.get(URI.Database.LINKED_MDB).getElementsByTag("rdfs:label").get(0).text()
+    );
     String releaseDate = orNull(() -> document.get(URI.Database.LINKED_MDB).getElementsByTag("movie:initial_release_date").get(0).text());
     Double gross = orNull(() -> Double.valueOf(document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:gross").get(0).text().replace("E", "E+")));
     Double budget = orNull(() -> Double.valueOf(document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:budget").get(0).text().replace("E", "E+")));
 
     String synopsis = orNull(() -> getTextOrderByLang(document.get(URI.Database.DBPEDIA), "dbo:abstract", Arrays.asList("fr", "en")));
 
-    Double runtime = orNull(() -> Double.valueOf(document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:runtime").get(0).text().replace("E", "E+")));
-    List<URI> actors = orEmpty(() -> extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:starring"));
-    List<URI> directors = orEmpty(() -> extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:director"));
+    Double runtime = orNull(
+        () -> Double.valueOf(document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:runtime").get(0).text()),
+        () -> Double.valueOf(document.get(URI.Database.LINKED_MDB).getElementsByTag("dbo:runtime").get(0).text())
+    );
+    List<URI> actors = orEmpty(
+        () -> extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:starring"),
+        () -> extractResourceFrom(document.get(URI.Database.LINKED_MDB), "movie:actor")
+    );
+    List<URI> directors = orEmpty(
+        () -> extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:director")
+    // todo    () -> extractResourceFrom(document.get(URI.Database.LINKED_MDB), "movie:director")
+    );
 
     directors.addAll(
         extractResourceFrom(document.get(URI.Database.LINKED_MDB), "movie:producer")

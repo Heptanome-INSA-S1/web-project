@@ -141,6 +141,16 @@ public interface SPARQLRepository<M> {
     }
   }
 
+  default <E> List<E> orEmpty(Supplier<List<E>>... suppliers) {
+    List<E> result = new ArrayList<>();
+    for(int i = 0; i < suppliers.length; i++) {
+      try {
+        result.addAll(suppliers[i].get());
+      } catch (Exception ignored) {}
+    }
+    return result;
+  }
+
   default Element getElementByFilteredTag(Document document, String tag, String attribute, String filter) {
     return document
         .getElementsByTag(tag)
