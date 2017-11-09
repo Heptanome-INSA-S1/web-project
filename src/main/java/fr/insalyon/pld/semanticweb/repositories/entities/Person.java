@@ -1,6 +1,8 @@
-package fr.insalyon.pld.semanticweb.entities;
+package fr.insalyon.pld.semanticweb.repositories.entities;
 
-import java.util.Date;
+import fr.insalyon.pld.semanticweb.repositories.entities.utils.MultiSourcedLink;
+import fr.insalyon.pld.semanticweb.repositories.entities.utils.URI;
+
 import java.util.List;
 
 public class Person {

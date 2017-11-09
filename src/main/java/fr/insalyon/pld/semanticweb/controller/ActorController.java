@@ -1,7 +1,7 @@
 package fr.insalyon.pld.semanticweb.controller;
 
-import fr.insalyon.pld.semanticweb.entities.Artist;
-import fr.insalyon.pld.semanticweb.repositories.ActorRepository;
+import fr.insalyon.pld.semanticweb.repositories.entities.Artist;
+import fr.insalyon.pld.semanticweb.repositories.services.ActorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;

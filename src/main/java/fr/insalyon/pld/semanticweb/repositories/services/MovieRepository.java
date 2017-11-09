@@ -1,17 +1,16 @@
-package fr.insalyon.pld.semanticweb.repositories;
+package fr.insalyon.pld.semanticweb.repositories.services;
 
-import fr.insalyon.pld.semanticweb.entities.Movie;
-import fr.insalyon.pld.semanticweb.entities.MultiSourcedDocument;
-import fr.insalyon.pld.semanticweb.entities.URI;
+import fr.insalyon.pld.semanticweb.repositories.AbstractSPARQLRepositoryImpl;
+import fr.insalyon.pld.semanticweb.repositories.SPARQLRepository;
+import fr.insalyon.pld.semanticweb.repositories.entities.Movie;
+import fr.insalyon.pld.semanticweb.repositories.entities.utils.MultiSourcedDocument;
+import fr.insalyon.pld.semanticweb.repositories.entities.utils.URI;
 import fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker;
 import fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilder;
 import fr.insalyon.pld.semanticweb.util.Lazy;
-import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker.IS;
 import static fr.insalyon.pld.semanticweb.model.tuple.Triplet.tripletOf;
@@ -71,7 +70,7 @@ public class MovieRepository extends AbstractSPARQLRepositoryImpl<Movie> impleme
     String frenchName = orNull(() -> getElementByFilteredTag(document.get(URI.Database.DBPEDIA), "rdfs:label", "xml:lang", "fr").text());
     String englishName = orNull(() -> getElementByFilteredTag(document.get(URI.Database.DBPEDIA), "rdfs:label", "xml:lang", "en").text());
     String title = (frenchName == null ? englishName : frenchName);
-    Date releaseDate = null; // pas trouvé sur dbpedia, TODO
+    String releaseDate = null; // pas trouvé sur dbpedia, TODO
     Double gross = orNull(() -> Double.valueOf(document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:gross").get(0).text().replace("E", "E+")));
     Double budget = orNull(() -> Double.valueOf(document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:budget").get(0).text().replace("E", "E+")));
 
@@ -81,7 +80,7 @@ public class MovieRepository extends AbstractSPARQLRepositoryImpl<Movie> impleme
     Double runtime = orNull(() -> Double.valueOf(document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:runtime").get(0).text().replace("E", "E+")));
     List<URI> actors = orEmpty(() -> extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:starring"));
     List<URI> directors = orEmpty(() -> extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:director"));
-    List<URI> genres = orEmpty(() -> null);
+    List<String> genres = orEmpty(() -> null);
 
     URI dbpediaURI = orNull(() -> URI.from(document.get(URI.Database.DBPEDIA).baseUri()));
     URI linkedmdbURI = orNull(() -> URI.from(document.get(URI.Database.LINKED_MDB).baseUri()));

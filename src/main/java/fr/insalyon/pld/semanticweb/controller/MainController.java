@@ -1,22 +1,20 @@
 package fr.insalyon.pld.semanticweb.controller;
 
 
-import fr.insalyon.pld.semanticweb.entities.Movie;
 import fr.insalyon.pld.semanticweb.model.output.Annotation;
 import fr.insalyon.pld.semanticweb.model.output.DBpediaQuery;
 import fr.insalyon.pld.semanticweb.model.output.JsonObject;
 import fr.insalyon.pld.semanticweb.model.output.SearchLink;
 import fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker;
 import fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker.TVShow;
-import fr.insalyon.pld.semanticweb.repositories.MovieRepository;
+import fr.insalyon.pld.semanticweb.repositories.entities.utils.MultiSourcedLink;
+import fr.insalyon.pld.semanticweb.repositories.entities.utils.URI;
+import fr.insalyon.pld.semanticweb.repositories.services.MovieRepository;
 import fr.insalyon.pld.semanticweb.tools.HttpHelper;
 import javafx.util.Pair;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdfconnection.RDFConnection;
-import org.apache.jena.rdfconnection.RDFConnectionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -138,15 +136,20 @@ public class MainController {
 
   @RequestMapping(value = "/test", produces = "application/json")
   @ResponseBody
-  Object test() {
+  Object test(
+      @RequestParam(name = "uri") String uri
+  ) {
 
-    return movieRepository.execute(
-        select("?movie")
-        .where(
-            tripletOf("?movie", IS, SchemaLinker.Movie.type),
-            tripletOf("?movie", SchemaLinker.Movie.hasName, "?movieName"),
-            like("?movieName", "^the lord")).limit(3)
-    );
+    String[] splitted = uri.split("::");
+    MultiSourcedLink multiSourcedLink = new MultiSourcedLink();
+    for(int i = 0; i < splitted.length; i++) {
+      System.out.println(splitted[i]);
+      String anchor = splitted[i].split("@")[0].replaceAll("-", "/");
+      String db = splitted[i].split("@")[1];
+      URI.Database database = URI.Database.customValueOf(db);
+      multiSourcedLink.addSource(database, new URI(anchor, database, database.url + anchor));
+    }
+    return multiSourcedLink;
   }
 
   private JsonObject toCleanJson(Model self) {

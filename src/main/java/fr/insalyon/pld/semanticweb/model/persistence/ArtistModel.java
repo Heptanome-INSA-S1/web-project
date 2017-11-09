@@ -1,6 +1,6 @@
 package fr.insalyon.pld.semanticweb.model.persistence;
 
-import fr.insalyon.pld.semanticweb.entities.Movie;
+import fr.insalyon.pld.semanticweb.repositories.entities.Movie;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package fr.insalyon.pld.semanticweb.entities;
+package fr.insalyon.pld.semanticweb.repositories.entities.utils;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package fr.insalyon.pld.semanticweb.entities;
+package fr.insalyon.pld.semanticweb.repositories.entities.utils;
 
 import org.jsoup.nodes.Document;
 

@@ -1,9 +1,9 @@
 package fr.insalyon.pld.semanticweb.repositories;
 
-import fr.insalyon.pld.semanticweb.entities.CustomResultSet;
-import fr.insalyon.pld.semanticweb.entities.MultiSourcedDocument;
-import fr.insalyon.pld.semanticweb.entities.MultiSourcedLink;
-import fr.insalyon.pld.semanticweb.entities.URI;
+import fr.insalyon.pld.semanticweb.repositories.entities.utils.CustomResultSet;
+import fr.insalyon.pld.semanticweb.repositories.entities.utils.MultiSourcedDocument;
+import fr.insalyon.pld.semanticweb.repositories.entities.utils.MultiSourcedLink;
+import fr.insalyon.pld.semanticweb.repositories.entities.utils.URI;
 import fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilder;
 import fr.insalyon.pld.semanticweb.util.Lazy;
 import org.jsoup.nodes.Document;
@@ -12,11 +12,13 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static fr.insalyon.pld.semanticweb.model.tuple.Triplet.tripletOf;
+import static fr.insalyon.pld.semanticweb.services.sparqldsl.Filter.like;
+import static fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilderImpl.select;
 import static fr.insalyon.pld.semanticweb.tools.HttpHelper.httpHelper;
 
 
@@ -73,6 +75,30 @@ public interface SPARQLRepository<M> {
     return hydrate(multiSourcedDocument);
   }
 
+  default List<M> retrieveFromURI(List<URI> uriList) {
+    if(uriList == null) return new ArrayList<>();
+    List<M> result = new ArrayList<>();
+    uriList.forEach(uri -> {
+      Document document = httpHelper(uri.uri).header("Accept", "application/rdf+xml, application/xml").getDocument();
+      String label = orNull(() -> getElementByFilteredTag(document, "rdfs:label", "xml:lang", "en").text());
+
+      try {
+        if(label == null) {
+          document.getElementsByTag("rdfs:label").get(0).text();
+        }
+        result.add(fetchAndTransform(
+            select("?x")
+                .where(
+                    tripletOf("?x", "rdfs:label", "?label"),
+                    like("?label", label)
+                ).limit(1)).get(0).get(0).get());
+
+      } catch (Exception ignored) {}
+
+    });
+    return result;
+  }
+
   /**
    * Return a list of "Light" lazy M
    *
@@ -102,7 +128,12 @@ public interface SPARQLRepository<M> {
   }
   default <E> List<E> orEmpty(Supplier<List<E>> supplier) {
     try {
-      return supplier.get();
+      List<E> result = supplier.get();
+      if(result == null) {
+        return new ArrayList<>();
+      } else {
+        return result;
+      }
     } catch (Exception ignored) {
       return new ArrayList<E>();
     }
