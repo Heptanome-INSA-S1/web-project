@@ -12,6 +12,7 @@ public class PersonMapper implements Mapper<Person, PersonModel> {
   @Override
   public PersonModel entityToLightModel(Person entity) {
     return new PersonModel(
+        entity.uri,
         entity.name,
         entity.firstName,
         entity.birthDate,
@@ -26,6 +27,7 @@ public class PersonMapper implements Mapper<Person, PersonModel> {
   public PersonModel entityToFullModel(Person entity) {
 
     return new PersonModel(
+        entity.uri,
         entity.name,
         entity.firstName,
         entity.birthDate,

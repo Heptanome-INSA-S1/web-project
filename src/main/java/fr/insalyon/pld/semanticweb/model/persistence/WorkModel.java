@@ -16,8 +16,9 @@ public class WorkModel {
   public final List<ArtistModel> directors;
   public final Double gross;
   public final Double budget;
+  public final Double runtime;
 
-  public WorkModel(List<URI> uri, String title, String poster, String releaseDate, String plot, List<ArtistModel> actors, List<String> genres, List<ArtistModel> directors, Double gross, Double budget) {
+  public WorkModel(List<URI> uri, String title, String poster, String releaseDate, String plot, List<ArtistModel> actors, List<String> genres, List<ArtistModel> directors, Double gross, Double budget, Double runtime) {
     this.uri = uri;
     this.title = title;
     this.poster = poster;
@@ -28,5 +29,6 @@ public class WorkModel {
     this.directors = directors;
     this.gross = gross;
     this.budget = budget;
+    this.runtime = runtime;
   }
 }

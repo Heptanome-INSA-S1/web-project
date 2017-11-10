@@ -77,7 +77,10 @@ public class ActorRepository extends AbstractSPARQLRepositoryImpl<Artist> implem
     String lastname = orNull(() -> fullname.split(" ")[1]);
     String firstname = orNull(() -> fullname.split(" ")[0]);
 
+    List<URI> uri = document.entrySet().stream().map(entry -> URI.from(document.get(entry.getKey()).baseUri())).collect(Collectors.toList());
+
     return new Artist(
+        uri,
         lastname,
         firstname,
         birthDay,
