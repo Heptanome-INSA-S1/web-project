@@ -10,7 +10,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static fr.insalyon.pld.semanticweb.tools.Kotlin.mutableListOf;

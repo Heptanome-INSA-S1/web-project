@@ -15,7 +15,7 @@ public class Cache {
 
     private void removeSome() {
 
-      while (size() > 50) {
+      while (size() > 500) {
         String[] keys = (String[]) keySet().toArray();
         int randomIndex = randomGenerator.nextInt(size());
         String randomKey = keys[randomIndex];
@@ -27,7 +27,7 @@ public class Cache {
     @Override
     public Document put(String key, Document value) {
 
-      if(size() > 100) {
+      if(size() > 1000) {
         removeSome();
       }
       return super.put(key, value);
@@ -38,17 +38,6 @@ public class Cache {
   private static Map<String, Document> globalCache = new CustomMap();
 
   public static Map<String, Document> getGlobalCache() {
-
-    if(globalCache.size() > 100) {
-
-      for(int i = 0 ; i < 10; i++) {
-        String[] keys = (String[]) globalCache.keySet().toArray();
-        int randomIndex = randomGenerator.nextInt(globalCache.size());
-        String randomKey = keys[randomIndex];
-      }
-
-    }
-
     return globalCache;
   }
 
