@@ -66,12 +66,16 @@ public class ActorRepository extends AbstractSPARQLRepositoryImpl<Artist> implem
     }
 
     List<URI> children = orEmpty(
-        () -> extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:child")
+        () -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:child").stream().map(el -> URI.from(el.parent().attr("rdf:about"))).collect(Collectors.toList())
     );
 
     URI partner = orNull(
-        () -> lastOf(extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:spouse")),
-        () -> lastOf(extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:partner"))
+        () -> lastOf(
+            document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:spouse").stream().map(el -> URI.from(el.parent().attr("rdf:about"))).collect(Collectors.toList())
+        ),
+        () -> lastOf(
+            document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:partner").stream().map(el -> URI.from(el.parent().attr("rdf:about"))).collect(Collectors.toList())
+        )
     );
 
     String lastname = orNull(() -> fullname.split(" ")[1]);

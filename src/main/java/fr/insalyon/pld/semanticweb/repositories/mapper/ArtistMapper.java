@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Component("ArtistMapper")
@@ -50,9 +52,18 @@ public class ArtistMapper implements Mapper<Artist, ArtistModel> {
         entity.deathDate,
         entity.biography,
         personMapper.entitiesToLightModels(actorRepository.retrieveFromURI(entity.children).stream().map(child -> (Person)child).collect(Collectors.toList())),
-        null,
+        orNull(() -> personMapper.entityToLightModel(actorRepository.retrieveFromURI(Arrays.asList(entity.partner)).stream().map(partner -> (Person)partner).collect(Collectors.toList()).get(0))),
         movieRepository.retrieveFromURI(entity.filmography),
         movieRepository.retrieveFromURI(entity.bestMovies)
     );
   }
+
+  private <E> E orNull(Supplier<E> supplier) {
+    try {
+      return supplier.get();
+    } catch (Exception ignored) {
+      return null;
+    }
+  }
+
 }
