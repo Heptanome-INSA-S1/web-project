@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -27,7 +28,9 @@ public interface SPARQLRepository<M> {
   String HTTP_DATA_LINKEDMDB_ORG = "http://data.linkedmdb.org/";
 
   Optional<M> findById(String uuid);
+
   List<M> findAll();
+
   List<M> findByName(String name);
 
   /**
@@ -49,15 +52,19 @@ public interface SPARQLRepository<M> {
     CustomResultSet<MultiSourcedLink> rows = execute(query);
     return rows.map(multiSourcedLink -> {
       MultiSourcedDocument multiSourcedDocument;
-      if(multiSourcedLink == null) {
+      if (multiSourcedLink == null) {
         multiSourcedDocument = null;
       } else {
-        multiSourcedDocument  = new MultiSourcedDocument();
+        multiSourcedDocument = new MultiSourcedDocument();
         multiSourcedLink.forEach((db, uri) -> {
           try {
-            multiSourcedDocument.put(db, httpHelper(uri.uri).header("Accept", "application/rdf+xml, application/xml").getDocument());
-          } catch (Exception ignored) {}
-          });
+            if(Cache.getGlobalCache().get(uri.uri) == null) {
+              Cache.getGlobalCache().put(uri.uri, httpHelper(uri.uri).header("Accept", "application/rdf+xml, application/xml").getDocument());
+            }
+            multiSourcedDocument.put(db, Cache.getGlobalCache().get(uri.uri));
+          } catch (Exception ignored) {
+          }
+        });
       }
 
       return (Lazy<MultiSourcedDocument>) () -> multiSourcedDocument.isEmpty() ? null : multiSourcedDocument;
@@ -66,37 +73,47 @@ public interface SPARQLRepository<M> {
   }
 
   default M retrieve(MultiSourcedLink multiSourcedLink) {
-    if(multiSourcedLink == null) return null;
+    if (multiSourcedLink == null) return null;
     MultiSourcedDocument multiSourcedDocument = new MultiSourcedDocument();
     multiSourcedLink.forEach((db, link) -> {
-      multiSourcedDocument.put(db, httpHelper(link.uri).header("Accept", "application/rdf+xml, application/xml").getDocument());
+      if(Cache.getGlobalCache().get(link.uri) == null) {
+        Cache.getGlobalCache().put(link.uri, httpHelper(link.uri).header("Accept", "application/rdf+xml, application/xml").getDocument());
+      }
+      multiSourcedDocument.put(db, Cache.getGlobalCache().get(link.uri));
     });
     return hydrate(multiSourcedDocument);
   }
 
   default List<M> retrieveFromURI(List<URI> uriList) {
-    if(uriList == null) return new ArrayList<>();
+    if (uriList == null) return new ArrayList<>();
     List<M> result = new ArrayList<>();
     uriList.forEach(uri -> {
-
       try {
         MultiSourcedDocument multiSourcedDocument = new MultiSourcedDocument();
-        multiSourcedDocument.put(uri.database, httpHelper(uri.uri).header("Accept", "application/rdf+xml, application/xml").getDocument());
+        if (Cache.getGlobalCache().get(uri.uri) == null) {
+          Cache.getGlobalCache().put(uri.uri, httpHelper(uri.uri).header("Accept", "application/rdf+xml, application/xml").getDocument());
+        }
+        multiSourcedDocument.put(uri.database, Cache.getGlobalCache().get(uri.uri));
         result.add(hydrate(multiSourcedDocument));
-      } catch (Exception ignored) {}
+      } catch (Exception ignored) {
+      }
 
     });
     return result;
   }
+
   default M retrieveFromURI(URI uri) {
-    if(uri == null) return null;
-      try {
-        MultiSourcedDocument multiSourcedDocument = new MultiSourcedDocument();
-        multiSourcedDocument.put(uri.database, httpHelper(uri.uri).header("Accept", "application/rdf+xml, application/xml").getDocument());
-        return hydrate(multiSourcedDocument);
-      } catch (Exception ignored) {
-        return null;
+    if (uri == null) return null;
+    try {
+      MultiSourcedDocument multiSourcedDocument = new MultiSourcedDocument();
+      if(Cache.getGlobalCache().get(uri.uri) == null) {
+        Cache.getGlobalCache().put(uri.uri, httpHelper(uri.uri).header("Accept", "application/rdf+xml, application/xml").getDocument());
       }
+      multiSourcedDocument.put(uri.database, Cache.getGlobalCache().get(uri.uri));
+      return hydrate(multiSourcedDocument);
+    } catch (Exception ignored) {
+      return null;
+    }
   }
 
   /**
@@ -106,8 +123,8 @@ public interface SPARQLRepository<M> {
    * @return
    */
   default List<List<Lazy<M>>> fetchAndTransform(QueryBuilder query) {
-    return fetch(query).map(multiSourcedDocumentLazy -> (Lazy<M>)() -> {
-      if(multiSourcedDocumentLazy.get() == null) return null;
+    return fetch(query).map(multiSourcedDocumentLazy -> (Lazy<M>) () -> {
+      if (multiSourcedDocumentLazy.get() == null) return null;
       else return hydrate(multiSourcedDocumentLazy.get());
     }).toListOfList();
   }
@@ -132,11 +149,12 @@ public interface SPARQLRepository<M> {
 
   default <E> E orNull(Supplier<E>... suppliers) {
 
-    for(int i = 0; i < suppliers.length; i++) {
+    for (int i = 0; i < suppliers.length; i++) {
       try {
         E result = suppliers[i].get();
-        if(result != null) return suppliers[i].get();
-      } catch (Exception ignored) {}
+        if (result != null) return suppliers[i].get();
+      } catch (Exception ignored) {
+      }
     }
     return null;
   }
@@ -144,7 +162,7 @@ public interface SPARQLRepository<M> {
   default <E> List<E> orEmpty(Supplier<List<E>> supplier) {
     try {
       List<E> result = supplier.get();
-      if(result == null) {
+      if (result == null) {
         return new ArrayList<>();
       } else {
         return result;
@@ -156,10 +174,11 @@ public interface SPARQLRepository<M> {
 
   default <E> List<E> orEmpty(Supplier<List<E>>... suppliers) {
     List<E> result = new ArrayList<>();
-    for(int i = 0; i < suppliers.length; i++) {
+    for (int i = 0; i < suppliers.length; i++) {
       try {
         result.addAll(suppliers[i].get());
-      } catch (Exception ignored) {}
+      } catch (Exception ignored) {
+      }
     }
     return result;
   }

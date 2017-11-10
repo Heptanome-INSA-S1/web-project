@@ -6,9 +6,11 @@ import fr.insalyon.pld.semanticweb.repositories.SPARQLRepository;
 import fr.insalyon.pld.semanticweb.repositories.entities.Artist;
 import fr.insalyon.pld.semanticweb.repositories.entities.utils.MultiSourcedDocument;
 import fr.insalyon.pld.semanticweb.repositories.entities.utils.URI;
+import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
