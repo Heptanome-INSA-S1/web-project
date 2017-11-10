@@ -8,15 +8,25 @@ import java.util.stream.Collectors;
 
 public interface Mapper<E, M> {
 
-  M entityToLightModel(E entity);
+  default M entityToLightModel(E entity) {
+    return entityToLightModel(entity, true);
+  }
+  M entityToLightModel(E entity, Boolean firstCall);
 
   M entityToFullModel(E entity);
 
-  default List<M> entitiesToLightModels(List<E> entities) {
+  default List<M> entitiesToLightModels(List<E> entities, Boolean firstCall) {
     return entities.stream()
             .filter(Objects::nonNull)
-            .map(this::entityToLightModel)
+            .map(entity -> entityToLightModel(entity, firstCall))
             .collect(Collectors.toList());
+  }
+
+  default List<M> entitiesToLightModels(List<E> entities) {
+    return entities.stream()
+        .filter(Objects::nonNull)
+        .map(this::entityToLightModel)
+        .collect(Collectors.toList());
   }
 
   default List<M> entitiesToFullModels(List<E> entities) {
@@ -32,6 +42,14 @@ public interface Mapper<E, M> {
         result.addAll(supplier.get());
       } catch (Exception ignored) {}
     return result;
+  }
+
+  default  <E> E orNull(Supplier<E> supplier) {
+    try {
+      return supplier.get();
+    } catch (Exception ignored) {
+      return null;
+    }
   }
 
 }

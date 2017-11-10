@@ -27,21 +27,34 @@ public class ArtistMapper implements Mapper<Artist, ArtistModel> {
   MovieMapper movieMapper = new MovieMapper();
 
   @Override
-  public ArtistModel entityToLightModel(Artist entity) {
-
-    return new ArtistModel(
-        entity.uri,
-        entity.name,
-        entity.firstName,
-        entity.birthDate,
-        entity.deathDate,
-        entity.biography,
-        new ArrayList<>(),
-        null,
-        movieMapper.entitiesToLightModels(movieRepository.retrieveFromURI(entity.filmography)),
-        new ArrayList<>()
-    );
-
+  public ArtistModel entityToLightModel(Artist entity, Boolean firstCall) {
+    if(firstCall) {
+        return new ArtistModel(
+            entity.uri,
+            entity.name,
+            entity.firstName,
+            entity.birthDate,
+            entity.deathDate,
+            entity.biography,
+            new ArrayList<>(),
+            null,
+            movieMapper.entitiesToLightModels(movieRepository.retrieveFromURI(entity.filmography), false),
+            new ArrayList<>()
+        );
+    } else {
+        return new ArtistModel(
+            entity.uri,
+            entity.name,
+            entity.firstName,
+            entity.birthDate,
+            entity.deathDate,
+            entity.biography,
+            new ArrayList<>(),
+            null,
+            new ArrayList<>(),
+            new ArrayList<>()
+        );
+    }
   }
 
   @Override
@@ -62,12 +75,6 @@ public class ArtistMapper implements Mapper<Artist, ArtistModel> {
     );
   }
 
-  private <E> E orNull(Supplier<E> supplier) {
-    try {
-      return supplier.get();
-    } catch (Exception ignored) {
-      return null;
-    }
-  }
+
 
 }

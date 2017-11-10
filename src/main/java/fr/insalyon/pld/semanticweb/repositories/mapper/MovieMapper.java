@@ -24,21 +24,38 @@ public class MovieMapper implements Mapper<Movie, MovieModel> {
   ArtistMapper artistMapper;
 
   @Override
-  public MovieModel entityToLightModel(Movie entity) {
-    return new MovieModel(
-        entity.uri,
-        entity.title,
-        entity.poster,
-        entity.releaseDate,
-        entity.plot,
-        orEmpty(() -> artistMapper.entitiesToLightModels(actorRepository.retrieveFromURI(entity.actors))) ,
-        entity.genres,
-        new ArrayList<>(),
-        entity.gross,
-        entity.budget,
-        entity.runtime,
-        new ArrayList<>()
-    );
+  public MovieModel entityToLightModel(Movie entity, Boolean firstCall) {
+    if(firstCall) {
+      return new MovieModel(
+          entity.uri,
+          entity.title,
+          entity.poster,
+          entity.releaseDate,
+          entity.plot,
+          orEmpty(() -> artistMapper.entitiesToLightModels(actorRepository.retrieveFromURI(entity.actors), false)),
+          entity.genres,
+          new ArrayList<>(),
+          entity.gross,
+          entity.budget,
+          entity.runtime,
+          new ArrayList<>()
+      );
+    } else {
+      return new MovieModel(
+          entity.uri,
+          entity.title,
+          entity.poster,
+          entity.releaseDate,
+          entity.plot,
+          new ArrayList<>(),
+          entity.genres,
+          new ArrayList<>(),
+          entity.gross,
+          entity.budget,
+          entity.runtime,
+          new ArrayList<>()
+      );
+    }
   }
 
   @Override
