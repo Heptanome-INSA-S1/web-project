@@ -80,6 +80,11 @@ public class MovieRepository extends AbstractSPARQLRepositoryImpl<Movie> impleme
 
     List<String> genres = orEmpty(() -> null);
 
+    List<URI> writers = orNull(
+            () -> extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:writer"),
+            () -> extractResourceFrom(document.get(URI.Database.LINKED_MDB), "movie:writer")
+    );
+
     URI dbpediaURI = orNull(() -> URI.from(document.get(URI.Database.DBPEDIA).baseUri()));
     URI linkedmdbURI = orNull(() -> URI.from(document.get(URI.Database.LINKED_MDB).baseUri()));
     List<URI> sources = new ArrayList<>();
@@ -87,6 +92,6 @@ public class MovieRepository extends AbstractSPARQLRepositoryImpl<Movie> impleme
     if (dbpediaURI != null) sources.add(dbpediaURI);
     if (linkedmdbURI != null) sources.add(linkedmdbURI);
 
-    return new Movie(sources, poster, title, releaseDate, synopsis, runtime, actors, genres, directors, gross, budget);
+    return new Movie(sources, poster, title, releaseDate, synopsis, runtime, actors, genres, directors, gross, budget, writers);
   }
 }

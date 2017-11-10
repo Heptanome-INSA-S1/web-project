@@ -17,8 +17,9 @@ public class MovieModel extends WorkModel {
       List<ArtistModel> directors,
       Double gross,
       Double budget,
-      Double runtime
+      Double runtime,
+      List<ArtistModel> writers
   ) {
-    super(uri, title, poster, releaseDate, plot, actors, genres, directors, gross, budget, runtime);
+    super(uri, title, poster, releaseDate, plot, actors, genres, directors, gross, budget, runtime, writers);
   }
 }

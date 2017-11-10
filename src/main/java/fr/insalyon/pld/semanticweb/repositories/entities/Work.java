@@ -17,9 +17,10 @@ public class Work {
     public List<URI> directors;
     public Double gross;
     public Double budget;
+    public List<URI> writers;
 
 
-    public Work(List<URI> uri, String poster, String title, String releaseDate, String plot, Double runtime, List<URI> actors, List<String> genres, List<URI> directors, Double gross, Double budget) {
+    public Work(List<URI> uri, String poster, String title, String releaseDate, String plot, Double runtime, List<URI> actors, List<String> genres, List<URI> directors, Double gross, Double budget, List<URI> writers) {
         this.uri = uri;
         this.poster = poster;
         this.title = title;
@@ -31,5 +32,6 @@ public class Work {
         this.directors = directors;
         this.gross = gross;
         this.budget = budget;
+        this.writers = writers;
     }
 }

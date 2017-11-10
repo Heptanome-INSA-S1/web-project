@@ -34,7 +34,8 @@ public class MovieMapper implements Mapper<Movie, MovieModel> {
         new ArrayList<>(),
         entity.gross,
         entity.budget,
-        entity.runtime
+        entity.runtime,
+        new ArrayList<>()
     );
   }
 
@@ -51,7 +52,8 @@ public class MovieMapper implements Mapper<Movie, MovieModel> {
         artistMapper.entitiesToLightModels(producerRepository.retrieveFromURI(entity.directors)),
         entity.gross,
         entity.budget,
-        entity.runtime
+        entity.runtime,
+        artistMapper.entitiesToLightModels(producerRepository.retrieveFromURI(entity.writers))
     );
   }
 }
