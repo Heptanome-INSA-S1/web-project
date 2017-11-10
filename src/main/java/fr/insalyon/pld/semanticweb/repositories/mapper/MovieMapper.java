@@ -25,6 +25,7 @@ public class MovieMapper implements Mapper<Movie, MovieModel> {
   public MovieModel entityToLightModel(Movie entity) {
     return new MovieModel(
         entity.uri,
+        entity.title,
         entity.poster,
         entity.releaseDate,
         entity.plot,
@@ -40,6 +41,7 @@ public class MovieMapper implements Mapper<Movie, MovieModel> {
   public MovieModel entityToFullModel(Movie entity) {
     return new MovieModel(
         entity.uri,
+        entity.title,
         entity.poster,
         entity.releaseDate,
         entity.plot,

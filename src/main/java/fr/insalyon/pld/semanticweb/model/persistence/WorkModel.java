@@ -7,6 +7,7 @@ import java.util.List;
 public class WorkModel {
 
   public final List<URI> uri;
+  public final String title;
   public final String poster;
   public final String releaseDate;
   public final String plot;
@@ -16,8 +17,9 @@ public class WorkModel {
   public final Double gross;
   public final Double budget;
 
-  public WorkModel(List<URI> uri, String poster, String releaseDate, String plot, List<ArtistModel> actors, List<String> genres, List<ArtistModel> directors, Double gross, Double budget) {
+  public WorkModel(List<URI> uri, String title, String poster, String releaseDate, String plot, List<ArtistModel> actors, List<String> genres, List<ArtistModel> directors, Double gross, Double budget) {
     this.uri = uri;
+    this.title = title;
     this.poster = poster;
     this.releaseDate = releaseDate;
     this.plot = plot;

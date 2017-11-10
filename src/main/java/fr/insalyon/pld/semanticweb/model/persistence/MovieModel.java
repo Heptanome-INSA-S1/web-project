@@ -8,6 +8,7 @@ public class MovieModel extends WorkModel {
 
   public MovieModel(
       List<URI> uri,
+      String title,
       String poster,
       String releaseDate,
       String plot,
@@ -17,6 +18,6 @@ public class MovieModel extends WorkModel {
       Double gross,
       Double budget
   ) {
-    super(uri, poster, releaseDate, plot, actors, genres, directors, gross, budget);
+    super(uri, title, poster, releaseDate, plot, actors, genres, directors, gross, budget);
   }
 }
