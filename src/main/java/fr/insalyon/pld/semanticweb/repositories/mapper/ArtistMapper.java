@@ -36,7 +36,7 @@ public class ArtistMapper implements Mapper<Artist, ArtistModel> {
         entity.biography,
         new ArrayList<>(),
         null,
-        new ArrayList<>(),
+        movieRepository.retrieveFromURI(entity.filmography),
         new ArrayList<>()
     );
 
