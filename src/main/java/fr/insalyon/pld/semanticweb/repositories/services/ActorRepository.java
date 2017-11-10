@@ -42,7 +42,7 @@ public class ActorRepository extends AbstractSPARQLRepositoryImpl<Artist> implem
             .where(
                 tripletOf("?actor", IS, SchemaLinker.Actor.type),
                 tripletOf("?actor", SchemaLinker.Actor.hasName, "?name"),
-                like("?name", "" + name)
+                like("?name", name)
             )
     ).forEach(row -> row.forEach(lazyMove -> actors.add(lazyMove.get())));
     return actors;

@@ -25,7 +25,7 @@ public class SchemaLinker {
     namespace.put("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
     namespace.put("schema", "http://schema.org/");
     namespace.put("foaf", "http://xmlns.com/foaf/0.1/");
-    namespace.put("yago", "http://yago-knowledge.org/resource/");
+    namespace.put("yago", "http://dbpedia.org/class/yago/");
     namespace.put("umbel-rc", "http://umbel.org/umbel/rc/");
     namespace.put("dbp", "http://dbpedia.org/property/");
     namespace.put("movie", "http://data.linkedmdb.org/resource/movie/");
