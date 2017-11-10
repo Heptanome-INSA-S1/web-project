@@ -37,7 +37,7 @@ public class SchemaLinker {
 
   public static class Actor {
 
-    public static List<String> type = Arrays.asList("yago:YagoLegalActor", "umbel-rc:Actor", "yago:Actor109765278", "yago:WikicatActors");
+    public static List<String> type = Arrays.asList("umbel-rc:Actor", "yago:WikicatActors");
     public static List<String> hasName = Arrays.asList("foaf:name", "rdfs:label");
     public static String hasBiography = "dbo:abstract";
 
