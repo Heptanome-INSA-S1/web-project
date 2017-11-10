@@ -68,26 +68,33 @@ public class ProducerRepository extends AbstractSPARQLRepositoryImpl<Artist> imp
       biography = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:abstract").get(0).text());
     }
 
+    String uri = document.get(URI.Database.DBPEDIA).baseUri();
     List<URI> children = orEmpty(
-        () -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:child").stream().map(el -> URI.from(el.parent().attr("rdf:about"))).collect(Collectors.toList())
+        () -> document
+            .get(URI.Database.DBPEDIA)
+            .getElementsByTag("dbo:child")
+            .stream()
+            .filter(el -> el.attr("rdf:resource").startsWith(uri.replace("/data/", "/resource/")))
+            .map(el -> URI.from(el.parent().attr("rdf:about")))
+            .collect(Collectors.toList())
     );
 
     URI partner = orNull(
         () -> lastOf(
-            document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:spouse").stream().map(el -> URI.from(el.parent().attr("rdf:about"))).collect(Collectors.toList())
+            document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:spouse").stream().map(el -> URI.from(el.attr("rdf:resource"))).collect(Collectors.toList())
         ),
         () -> lastOf(
-            document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:partner").stream().map(el -> URI.from(el.parent().attr("rdf:about"))).collect(Collectors.toList())
+            document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:partner").stream().map(el -> URI.from(el.attr("rdf:resource"))).collect(Collectors.toList())
         )
     );
 
     String lastname = orNull(() -> fullname.split(" ")[1]);
     String firstname = orNull(() -> fullname.split(" ")[0]);
 
-    List<URI> uri = document.entrySet().stream().map(entry -> URI.from(document.get(entry.getKey()).baseUri())).collect(Collectors.toList());
+    List<URI> uris = document.entrySet().stream().map(entry -> URI.from(document.get(entry.getKey()).baseUri())).collect(Collectors.toList());
 
     return new Artist(
-        uri,
+        uris,
         lastname,
         firstname,
         photo,
