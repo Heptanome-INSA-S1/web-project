@@ -75,7 +75,7 @@ public class MovieRepository extends AbstractSPARQLRepositoryImpl<Movie> impleme
     );
 
     directors.addAll(
-        extractResourceFrom(document.get(URI.Database.LINKED_MDB), "movie:producer")
+        orEmpty(() -> extractResourceFrom(document.get(URI.Database.LINKED_MDB), "movie:producer"))
     );
 
     List<String> genres = orEmpty(() -> null);

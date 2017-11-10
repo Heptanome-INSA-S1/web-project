@@ -31,13 +31,13 @@ abstract public class AbstractSPARQLRepositoryImpl<E> implements SPARQLRepositor
     System.out.println(query.buildWithPrefix());
 
     ResultSet dbpediaResult = RDFConnectionFactory.connect(HTTP_DBPEDIA_ORG).query(query.buildWithPrefix()).execSelect();
-    ResultSet linkedmdbResult = RDFConnectionFactory.connect(HTTP_DATA_LINKEDMDB_ORG).query(query.buildWithPrefix()).execSelect();
+   // ResultSet linkedmdbResult = RDFConnectionFactory.connect(HTTP_DATA_LINKEDMDB_ORG).query(query.buildWithPrefix()).execSelect();
 
     List<String> resources = Arrays.asList(query.getSelectClause().split(" "));
     List<Map<String, MultiSourcedLink>> internal = new ArrayList<>();
     resources.forEach(unused -> internal.add(new HashMap<>()));
     join(dbpediaResult, URI.Database.DBPEDIA, internal, resources);
-    join(linkedmdbResult, URI.Database.LINKED_MDB, internal, resources);
+   // join(linkedmdbResult, URI.Database.LINKED_MDB, internal, resources);
 
     return internal;
   }
