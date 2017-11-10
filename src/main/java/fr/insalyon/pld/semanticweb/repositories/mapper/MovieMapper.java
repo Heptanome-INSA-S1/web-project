@@ -29,7 +29,7 @@ public class MovieMapper implements Mapper<Movie, MovieModel> {
         entity.poster,
         entity.releaseDate,
         entity.plot,
-        new ArrayList<>(),
+        artistMapper.entitiesToLightModels(actorRepository.retrieveFromURI(entity.actors)),
         entity.genres,
         new ArrayList<>(),
         entity.gross,
