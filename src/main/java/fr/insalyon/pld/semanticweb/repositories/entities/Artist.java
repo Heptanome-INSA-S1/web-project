@@ -11,6 +11,7 @@ public class Artist extends Person {
   public final List<URI> bestMovies;
 
   public Artist(
+      List<URI> uri,
       String name,
       String firstName,
       String birthDate,
@@ -21,7 +22,7 @@ public class Artist extends Person {
       List<URI> filmography,
       List<URI> bestMovies
   ) {
-    super(name, firstName, birthDate, deathDate, biography, children, partner);
+    super(uri, name, firstName, birthDate, deathDate, biography, children, partner);
     this.filmography = filmography;
     this.bestMovies = bestMovies;
   }

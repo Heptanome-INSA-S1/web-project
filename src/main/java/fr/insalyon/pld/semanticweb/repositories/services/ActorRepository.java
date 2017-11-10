@@ -64,7 +64,15 @@ public class ActorRepository extends AbstractSPARQLRepositoryImpl<Artist> implem
     if(biography == null) {
       biography = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:abstract").get(0).text());
     }
-    URI partner = orNull(() -> lastOf(extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:spouse")));
+
+    List<URI> children = orEmpty(
+        () -> extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:child")
+    );
+
+    URI partner = orNull(
+        () -> lastOf(extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:spouse")),
+        () -> lastOf(extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:partner"))
+    );
 
     String lastname = orNull(() -> fullname.split(" ")[1]);
     String firstname = orNull(() -> fullname.split(" ")[0]);
@@ -75,7 +83,7 @@ public class ActorRepository extends AbstractSPARQLRepositoryImpl<Artist> implem
         birthDay,
         deathDay,
         biography,
-        new ArrayList<>(),
+        children,
         partner,
         movies,
         bestMovies
