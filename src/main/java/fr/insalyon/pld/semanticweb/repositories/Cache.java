@@ -15,7 +15,7 @@ public class Cache {
 
     private void removeSome() {
 
-      for(int i = 0; i < 10; i++) {
+      while (size() > 50) {
         String[] keys = (String[]) keySet().toArray();
         int randomIndex = randomGenerator.nextInt(size());
         String randomKey = keys[randomIndex];
@@ -27,7 +27,7 @@ public class Cache {
     @Override
     public Document put(String key, Document value) {
 
-      if(this.size() > 100) {
+      if(size() > 100) {
         removeSome();
       }
       return super.put(key, value);
