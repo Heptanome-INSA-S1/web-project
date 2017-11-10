@@ -124,7 +124,8 @@ public interface SPARQLRepository<M> {
 
     for(int i = 0; i < suppliers.length; i++) {
       try {
-        return suppliers[i].get();
+        E result = suppliers[i].get();
+        if(result != null) return suppliers[i].get();
       } catch (Exception ignored) {}
     }
     return null;

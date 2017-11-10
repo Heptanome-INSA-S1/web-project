@@ -70,7 +70,19 @@ public class ProducerRepository extends AbstractSPARQLRepositoryImpl<Artist> imp
     if(biography == null) {
       biography = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:abstract").get(0).text());
     }
-    URI partner = orNull(() -> lastOf(extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:spouse")));
+
+    List<URI> children = orEmpty(
+        () -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:child").stream().map(el -> URI.from(el.parent().attr("rdf:about"))).collect(Collectors.toList())
+    );
+
+    URI partner = orNull(
+        () -> lastOf(
+            document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:spouse").stream().map(el -> URI.from(el.parent().attr("rdf:about"))).collect(Collectors.toList())
+        ),
+        () -> lastOf(
+            document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:partner").stream().map(el -> URI.from(el.parent().attr("rdf:about"))).collect(Collectors.toList())
+        )
+    );
 
     String lastname = orNull(() -> fullname.split(" ")[1]);
     String firstname = orNull(() -> fullname.split(" ")[0]);
@@ -84,7 +96,7 @@ public class ProducerRepository extends AbstractSPARQLRepositoryImpl<Artist> imp
         birthDay,
         deathDay,
         biography,
-        new ArrayList<>(),
+        children,
         partner,
         movies,
         bestMovies

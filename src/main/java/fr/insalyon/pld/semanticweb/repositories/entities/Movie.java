@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Movie extends Work {
 
-    public Movie(List<URI> uri, String poster, String title, String releaseDate, String plot, Double runtime, List<URI> artists, List<String> genres, List<URI> directors, Double gross, Double budget) {
-        super(uri, poster, title, releaseDate, plot, runtime, artists, genres, directors, gross, budget);
+    public Movie(List<URI> uri, String poster, String title, String releaseDate, String plot, Double runtime, List<URI> artists, List<String> genres, List<URI> directors, Double gross, Double budget, List<URI> writers) {
+        super(uri, poster, title, releaseDate, plot, runtime, artists, genres, directors, gross, budget, writers);
     }
 }
