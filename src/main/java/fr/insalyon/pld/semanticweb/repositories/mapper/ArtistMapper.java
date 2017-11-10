@@ -67,12 +67,12 @@ public class ArtistMapper implements Mapper<Artist, ArtistModel> {
         entity.birthDate,
         entity.deathDate,
         entity.biography,
-        personMapper.entitiesToLightModels(actorRepository.retrieveFromURI(entity.children).stream().map(child -> (Person)child).collect(Collectors.toList())),
+        personMapper.entitiesToLightModels(actorRepository.retrieveFromURI(entity.children).stream().map(child -> (Person)child).collect(Collectors.toList()), false),
         orNull(
-            () -> personMapper.entityToLightModel(actorRepository.retrieveFromURI(entity.partner))
+            () -> personMapper.entityToLightModel(actorRepository.retrieveFromURI(entity.partner), false)
         ),
-        movieMapper.entitiesToLightModels(movieRepository.retrieveFromURI(entity.filmography)),
-        movieMapper.entitiesToLightModels(movieRepository.retrieveFromURI(entity.bestMovies))
+        movieMapper.entitiesToLightModels(movieRepository.retrieveFromURI(entity.filmography), false),
+        movieMapper.entitiesToLightModels(movieRepository.retrieveFromURI(entity.bestMovies), false)
     );
   }
 

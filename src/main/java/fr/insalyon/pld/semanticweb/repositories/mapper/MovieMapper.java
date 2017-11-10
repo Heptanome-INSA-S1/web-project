@@ -66,13 +66,13 @@ public class MovieMapper implements Mapper<Movie, MovieModel> {
         entity.poster,
         entity.releaseDate,
         entity.plot,
-        artistMapper.entitiesToLightModels(actorRepository.retrieveFromURI(entity.actors)),
+        artistMapper.entitiesToLightModels(actorRepository.retrieveFromURI(entity.actors), false),
         entity.genres,
-        artistMapper.entitiesToLightModels(producerRepository.retrieveFromURI(entity.directors)),
+        artistMapper.entitiesToLightModels(producerRepository.retrieveFromURI(entity.directors), false),
         entity.gross,
         entity.budget,
         entity.runtime,
-        artistMapper.entitiesToLightModels(producerRepository.retrieveFromURI(entity.writers))
+        artistMapper.entitiesToLightModels(producerRepository.retrieveFromURI(entity.writers), false)
     );
   }
 
