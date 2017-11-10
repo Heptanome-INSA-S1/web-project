@@ -16,9 +16,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static fr.insalyon.pld.semanticweb.model.tuple.Triplet.tripletOf;
-import static fr.insalyon.pld.semanticweb.services.sparqldsl.Filter.like;
-import static fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilderImpl.select;
 import static fr.insalyon.pld.semanticweb.tools.HttpHelper.httpHelper;
 
 
@@ -57,11 +54,13 @@ public interface SPARQLRepository<M> {
       } else {
         multiSourcedDocument  = new MultiSourcedDocument();
         multiSourcedLink.forEach((db, uri) -> {
-          multiSourcedDocument.put(db, httpHelper(uri.uri).header("Accept", "application/rdf+xml, application/xml").getDocument());
-        });
+          try {
+            multiSourcedDocument.put(db, httpHelper(uri.uri).header("Accept", "application/rdf+xml, application/xml").getDocument());
+          } catch (Exception ignored) {}
+          });
       }
 
-      return (Lazy<MultiSourcedDocument>) () -> multiSourcedDocument;
+      return (Lazy<MultiSourcedDocument>) () -> multiSourcedDocument.isEmpty() ? null : multiSourcedDocument;
     });
 
   }
@@ -97,7 +96,10 @@ public interface SPARQLRepository<M> {
    * @return
    */
   default List<List<Lazy<M>>> fetchAndTransform(QueryBuilder query) {
-    return fetch(query).map(multiSourcedDocumentLazy -> (Lazy<M>)() -> hydrate(multiSourcedDocumentLazy.get())).toListOfList();
+    return fetch(query).map(multiSourcedDocumentLazy -> (Lazy<M>)() -> {
+      if(multiSourcedDocumentLazy.get() == null) return null;
+      else return hydrate(multiSourcedDocumentLazy.get());
+    }).toListOfList();
   }
 
   /**

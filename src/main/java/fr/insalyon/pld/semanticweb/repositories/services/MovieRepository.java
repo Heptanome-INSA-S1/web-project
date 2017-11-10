@@ -1,21 +1,19 @@
 package fr.insalyon.pld.semanticweb.repositories.services;
 
+import fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker;
 import fr.insalyon.pld.semanticweb.repositories.AbstractSPARQLRepositoryImpl;
 import fr.insalyon.pld.semanticweb.repositories.SPARQLRepository;
 import fr.insalyon.pld.semanticweb.repositories.entities.Movie;
 import fr.insalyon.pld.semanticweb.repositories.entities.utils.MultiSourcedDocument;
 import fr.insalyon.pld.semanticweb.repositories.entities.utils.URI;
-import fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker;
-import fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilder;
-import fr.insalyon.pld.semanticweb.util.Lazy;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker.IS;
 import static fr.insalyon.pld.semanticweb.model.tuple.Triplet.tripletOf;
-import static fr.insalyon.pld.semanticweb.services.sparqldsl.Filter.hasUri;
 import static fr.insalyon.pld.semanticweb.services.sparqldsl.Filter.like;
 import static fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilderImpl.select;
 
@@ -29,8 +27,12 @@ public class MovieRepository extends AbstractSPARQLRepositoryImpl<Movie> impleme
         select("?movie")
             .where(
                 tripletOf("?movie", IS, SchemaLinker.Movie.type)
-            ).orderAsc("?movie").limit(5)
-    ).forEach(row -> row.forEach(lazyMovie -> movies.add(lazyMovie.get())));
+            ).orderAsc("?movie").limit(30)
+    ).forEach(row -> row.forEach(lazyMovie -> {
+      try {
+        movies.add(lazyMovie.get());
+      } catch (Exception ignored) {}
+    }));
     return movies;
   }
 
@@ -50,7 +52,7 @@ public class MovieRepository extends AbstractSPARQLRepositoryImpl<Movie> impleme
 
   @Override
   public Movie hydrate(MultiSourcedDocument document) {
-    String poster = null; // pas trouvé sur dbpedia, TODO
+    String poster = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:thumbnail").get(0).attr("rdf:resource")); // pas trouvé sur dbpedia, TODO
     String title = orNull(
         () -> getTextOrderByLang(document.get(URI.Database.DBPEDIA), "rdfs:label", Arrays.asList("fr", "en")),
         () -> document.get(URI.Database.LINKED_MDB).getElementsByTag("rdfs:label").get(0).text()
