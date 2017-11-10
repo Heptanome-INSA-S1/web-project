@@ -82,7 +82,7 @@ public class MovieRepository extends AbstractSPARQLRepositoryImpl<Movie> impleme
 
     List<String> genres = orEmpty(() -> null);
 
-    List<URI> writers = orNull(
+    List<URI> writers = orEmpty(
             () -> extractResourceFrom(document.get(URI.Database.DBPEDIA), "dbo:writer"),
             () -> extractResourceFrom(document.get(URI.Database.LINKED_MDB), "movie:writer")
     );
