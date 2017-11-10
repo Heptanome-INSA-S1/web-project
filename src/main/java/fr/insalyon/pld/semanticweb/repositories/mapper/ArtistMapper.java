@@ -25,10 +25,6 @@ public class ArtistMapper implements Mapper<Artist, ArtistModel> {
   MovieMapper movieMapper = new MovieMapper();
 
   @Override
-            entity.firstName,
-            entity.photo,
-            entity.firstName,
-            entity.photo
   public ArtistModel entityToLightModel(Artist entity, Boolean firstCall) {
     if(firstCall) {
         return new ArtistModel(
