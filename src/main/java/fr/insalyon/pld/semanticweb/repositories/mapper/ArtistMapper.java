@@ -1,8 +1,7 @@
 package fr.insalyon.pld.semanticweb.repositories.mapper;
 
-import fr.insalyon.pld.semanticweb.model.persistence.PersonModel;
-import fr.insalyon.pld.semanticweb.repositories.entities.Artist;
 import fr.insalyon.pld.semanticweb.model.persistence.ArtistModel;
+import fr.insalyon.pld.semanticweb.repositories.entities.Artist;
 import fr.insalyon.pld.semanticweb.repositories.entities.Person;
 import fr.insalyon.pld.semanticweb.repositories.services.ActorRepository;
 import fr.insalyon.pld.semanticweb.repositories.services.MovieRepository;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -27,12 +25,17 @@ public class ArtistMapper implements Mapper<Artist, ArtistModel> {
   MovieMapper movieMapper = new MovieMapper();
 
   @Override
+            entity.firstName,
+            entity.photo,
+            entity.firstName,
+            entity.photo
   public ArtistModel entityToLightModel(Artist entity, Boolean firstCall) {
     if(firstCall) {
         return new ArtistModel(
             entity.uri,
             entity.name,
             entity.firstName,
+            entity.photo
             entity.birthDate,
             entity.deathDate,
             entity.biography,
@@ -46,6 +49,7 @@ public class ArtistMapper implements Mapper<Artist, ArtistModel> {
             entity.uri,
             entity.name,
             entity.firstName,
+            entity.photo,
             entity.birthDate,
             entity.deathDate,
             entity.biography,
@@ -63,6 +67,7 @@ public class ArtistMapper implements Mapper<Artist, ArtistModel> {
         entity.uri,
         entity.name,
         entity.firstName,
+        entity.photo,
         entity.birthDate,
         entity.deathDate,
         entity.biography,

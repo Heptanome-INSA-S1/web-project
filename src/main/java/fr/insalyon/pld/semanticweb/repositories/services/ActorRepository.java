@@ -27,7 +27,7 @@ public class ActorRepository extends AbstractSPARQLRepositoryImpl<Artist> implem
         select("?actor")
             .where(
                 tripletOf("?actor", IS, SchemaLinker.Actor.type)
-            ).limit(20)
+            ).limit(10)
     ).forEach(row -> row.forEach(lazyMove -> actors.add(lazyMove.get())));
     return actors;
   }
@@ -52,6 +52,7 @@ public class ActorRepository extends AbstractSPARQLRepositoryImpl<Artist> implem
         () -> document.get(URI.Database.DBPEDIA).getElementsByTag("foaf:name").get(0).text(),
         () -> document.get(URI.Database.LINKED_MDB).getElementsByTag("rdfs:label").get(0).text()
     );
+    String photo = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:thumbnail").get(0).attr("rdf:resource"));
     String birthDay = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:birthDate").get(0).text());
     String deathDay = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:deathDate").get(0).text());
     List<URI> movies = orEmpty(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:starring").parents().stream().map(element -> URI.from(element.attr("rdf:about"))).collect(Collectors.toList()));
@@ -83,6 +84,7 @@ public class ActorRepository extends AbstractSPARQLRepositoryImpl<Artist> implem
         uri,
         lastname,
         firstname,
+        photo,
         birthDay,
         deathDay,
         biography,

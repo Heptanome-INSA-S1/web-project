@@ -52,7 +52,7 @@ public class MovieRepository extends AbstractSPARQLRepositoryImpl<Movie> impleme
 
   @Override
   public Movie hydrate(MultiSourcedDocument document) {
-    String poster = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:thumbnail").get(0).attr("rdf:resource")); // pas trouvé sur dbpedia, TODO
+    String poster = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:thumbnail").get(0).attr("rdf:resource"));
     String title = orNull(
         () -> getTextOrderByLang(document.get(URI.Database.DBPEDIA), "rdfs:label", Arrays.asList("fr", "en")),
         () -> document.get(URI.Database.LINKED_MDB).getElementsByTag("rdfs:label").get(0).text()

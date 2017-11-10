@@ -6,19 +6,15 @@ import fr.insalyon.pld.semanticweb.repositories.SPARQLRepository;
 import fr.insalyon.pld.semanticweb.repositories.entities.Artist;
 import fr.insalyon.pld.semanticweb.repositories.entities.utils.MultiSourcedDocument;
 import fr.insalyon.pld.semanticweb.repositories.entities.utils.URI;
-import fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilder;
-import fr.insalyon.pld.semanticweb.util.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static fr.insalyon.pld.semanticweb.model.persistence.SchemaLinker.IS;
 import static fr.insalyon.pld.semanticweb.model.tuple.Triplet.tripletOf;
-import static fr.insalyon.pld.semanticweb.services.sparqldsl.Filter.hasUri;
 import static fr.insalyon.pld.semanticweb.services.sparqldsl.Filter.like;
 import static fr.insalyon.pld.semanticweb.services.sparqldsl.QueryBuilderImpl.select;
 
@@ -57,6 +53,7 @@ public class ProducerRepository extends AbstractSPARQLRepositoryImpl<Artist> imp
         () -> document.get(URI.Database.DBPEDIA).getElementsByTag("foaf:name").get(0).text(),
         () -> document.get(URI.Database.LINKED_MDB).getElementsByTag("rdfs:label").get(0).text()
     );
+    String photo = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:thumbnail").get(0).attr("rdf:resource"));
     String birthDay = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:birthDate").get(0).text());
     String deathDay = orNull(() -> document.get(URI.Database.DBPEDIA).getElementsByTag("dbo:deathDate").get(0).text());
     List<URI> movies = orEmpty(
@@ -93,6 +90,7 @@ public class ProducerRepository extends AbstractSPARQLRepositoryImpl<Artist> imp
         uri,
         lastname,
         firstname,
+        photo,
         birthDay,
         deathDay,
         biography,
