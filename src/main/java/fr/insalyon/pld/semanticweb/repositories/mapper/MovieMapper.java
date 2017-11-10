@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 
 @Component("MovieMapper")
 public class MovieMapper implements Mapper<Movie, MovieModel> {
@@ -29,7 +31,7 @@ public class MovieMapper implements Mapper<Movie, MovieModel> {
         entity.poster,
         entity.releaseDate,
         entity.plot,
-        new ArrayList<>(),
+        orEmpty(() -> artistMapper.entitiesToLightModels(actorRepository.retrieveFromURI(entity.actors))) ,
         entity.genres,
         new ArrayList<>(),
         entity.gross,
@@ -56,4 +58,6 @@ public class MovieMapper implements Mapper<Movie, MovieModel> {
         artistMapper.entitiesToLightModels(producerRepository.retrieveFromURI(entity.writers))
     );
   }
+
+
 }
