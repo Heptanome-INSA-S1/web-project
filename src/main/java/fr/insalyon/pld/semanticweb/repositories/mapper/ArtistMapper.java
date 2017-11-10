@@ -31,7 +31,7 @@ public class ArtistMapper implements Mapper<Artist, ArtistModel> {
             entity.uri,
             entity.name,
             entity.firstName,
-            entity.photo
+            entity.photo,
             entity.birthDate,
             entity.deathDate,
             entity.biography,
