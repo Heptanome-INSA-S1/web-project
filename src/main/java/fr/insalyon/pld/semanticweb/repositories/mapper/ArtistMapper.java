@@ -1,5 +1,6 @@
 package fr.insalyon.pld.semanticweb.repositories.mapper;
 
+import fr.insalyon.pld.semanticweb.model.persistence.PersonModel;
 import fr.insalyon.pld.semanticweb.repositories.entities.Artist;
 import fr.insalyon.pld.semanticweb.model.persistence.ArtistModel;
 import fr.insalyon.pld.semanticweb.repositories.entities.Person;
@@ -23,6 +24,7 @@ public class ArtistMapper implements Mapper<Artist, ArtistModel> {
   ActorRepository actorRepository;
 
   PersonMapper personMapper = new PersonMapper();
+  MovieMapper movieMapper = new MovieMapper();
 
   @Override
   public ArtistModel entityToLightModel(Artist entity) {
@@ -36,7 +38,7 @@ public class ArtistMapper implements Mapper<Artist, ArtistModel> {
         entity.biography,
         new ArrayList<>(),
         null,
-        movieRepository.retrieveFromURI(entity.filmography),
+        movieMapper.entitiesToLightModels(movieRepository.retrieveFromURI(entity.filmography)),
         new ArrayList<>()
     );
 
@@ -52,9 +54,11 @@ public class ArtistMapper implements Mapper<Artist, ArtistModel> {
         entity.deathDate,
         entity.biography,
         personMapper.entitiesToLightModels(actorRepository.retrieveFromURI(entity.children).stream().map(child -> (Person)child).collect(Collectors.toList())),
-        orNull(() -> personMapper.entityToLightModel(actorRepository.retrieveFromURI(Arrays.asList(entity.partner)).stream().map(partner -> (Person)partner).collect(Collectors.toList()).get(0))),
-        movieRepository.retrieveFromURI(entity.filmography),
-        movieRepository.retrieveFromURI(entity.bestMovies)
+        orNull(
+            () -> personMapper.entityToLightModel(actorRepository.retrieveFromURI(entity.partner))
+        ),
+        movieMapper.entitiesToLightModels(movieRepository.retrieveFromURI(entity.filmography)),
+        movieMapper.entitiesToLightModels(movieRepository.retrieveFromURI(entity.bestMovies))
     );
   }
 

@@ -7,8 +7,8 @@ import java.util.List;
 
 public class ArtistModel extends PersonModel {
 
-  public final List<Movie> filmography;
-  public final List<Movie> bestMovies;
+  public final List<MovieModel> filmography;
+  public final List<MovieModel> bestMovies;
 
   public ArtistModel(
       List<URI> uri,
@@ -19,8 +19,8 @@ public class ArtistModel extends PersonModel {
       String biography,
       List<PersonModel> children,
       PersonModel partner,
-      List<Movie> filmography,
-      List<Movie> bestMovies
+      List<MovieModel> filmography,
+      List<MovieModel> bestMovies
   ) {
     super(uri, name, firstName, birthDate, deathDate, biography, children, partner);
     this.filmography = filmography;

@@ -88,6 +88,16 @@ public interface SPARQLRepository<M> {
     });
     return result;
   }
+  default M retrieveFromURI(URI uri) {
+    if(uri == null) return null;
+      try {
+        MultiSourcedDocument multiSourcedDocument = new MultiSourcedDocument();
+        multiSourcedDocument.put(uri.database, httpHelper(uri.uri).header("Accept", "application/rdf+xml, application/xml").getDocument());
+        return hydrate(multiSourcedDocument);
+      } catch (Exception ignored) {
+        return null;
+      }
+  }
 
   /**
    * Return a list of "Light" lazy M
